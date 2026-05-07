@@ -48,7 +48,7 @@
 - Zde je stručný popis postupu:
 - **Nastavení**: Algoritmus pracuje s populací čtyř jedinců, jejichž chromozomy tvoří čtyři binární geny reprezentující celé kladné číslo **x**. Kvalita řešení se měří fitness funkcí definovanou jako **f=8−∣y∣**.
 - **Počáteční stav**: První generace je vytvořena náhodně (hodnoty x: 12, 3, 7, 9) a její průměrná zdatnost (fitness) je vypočtena na 4,25.
-- 
+
 <p align="center">
   <img width="443" height="224" alt="image" src="https://github.com/user-attachments/assets/5c6273c8-f867-407d-8f46-b22810eb912e" />
   <br>
