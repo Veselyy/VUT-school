@@ -35,9 +35,9 @@
 
 5. **Mutace:** Náhodná změna hodnoty vybraného genu u potomka.
 6. **Nová populace:** K nahrazení staré populace se používají modely:
-    - **generační** (výměna všech)
-    - **inkrementační** (výměna jednoho)
-    - modely **s překrytím** generací
+  - **generační** (výměna všech)
+  - **inkrementační** (výměna jednoho)
+  - modely **s překrytím** generací
 ### Ukončení výpočtu
 1. Nalezení optimálního řešení.
 2. Kvalita populace se po delší dobu nezvyšuje.
