@@ -9,9 +9,9 @@
 (vestavěné).
 
 2. **Popište rozdíl mezi statickou a třídní metodou v třídním objektově orientovaném jazyce (OOJ). Jaké je u nich omezení při použití instančních atributů a proč? (2 souvětí)**
-**Statická**: BEZ self-parametru – funkce ve jmenném prostoru třídy, nemůže přistupovat k inst. ani třídním
+- **Statická**: BEZ self-parametru – funkce ve jmenném prostoru třídy, nemůže přistupovat k inst. ani třídním
 proměnným přes self.
-**Třídní:** self = objekt třídy – může přistupovat k třídním proměnným. Obě nemohou
+- **Třídní:** self = objekt třídy – může přistupovat k třídním proměnným. Obě nemohou
 přistupovat k instančním atributům.
 
 3. **Mějme třídní OOJ s podporou výjimek, kde třída výjimky ExA má přímou podtřídu ExB a od ExB přímo dědí ExC. V hlavním těle programu mějme trojici bloků try-catch-finally (nazvěme je vnější) následovanou zbylým kódem, tzv. vnější epilog. Vnější catch-blok má formální parametr typu ExA. Uvnitř vnějšího try-bloku je trojice bloků try-catch-finally (nazvěme je vnitřní) a zbytek kódu vnějšího try-bloku označme jako vnitřní epilog. Vnitřní catch-blok má formální parametr typu ExC. Uvažujme, že na začátku vnitřního try-bloku dojde k vyvolání výjimky třídy ExB. Popište průběh ošetření výjimky v hlavním těle programu (až po případný návrat ke standardnímu modelu výpočtu), aby bylo jasné, které části kódu se vykonají a které ne a proč. (cca 4 souvětí)**
