@@ -1,0 +1,803 @@
+﻿Barva        
+* Subjektivní smysl vyvolaný působením světla daného spektra šířeným zdrojem, které se odráží od povrchu objektu a dopadá na sítnici lidského oka.
+* Oko následně předá získanou informaci do mozku, který ji interpretuje jako barvu odpovídajícím charakteristickým rozsahem vlnových délek světla odraženého od povrchu objektu.
+Co je potřeba?
+* Světlo(Nositel informace)
+* Objekt(má fyzické vlastnosti)
+* Pozorovatel(vnímá barvu)
+Světlo
+* Elektromagnetické záření určité vlnové délky
+* Je nositelem informace všeho co vidíme
+* Achromatické světlo (bílé) - rovnoměrné zastoupení vlnových délek
+* Chromatické světlo (barevné) - nerovnoměrné zastoupení vlnových délek
+Charakteristika světla
+* Jas (Lightness) - intenzita světla
+* Sytost (Saturation) - čistota barvy světla, šířka barevného spektra
+* Světlost (Value) - velikost achromatické složky světla (hlavní) barvy
+* Odstín (Hue) - dominantní vlnová délka světla  
+RGB
+   * Odpovídá aditivnímu míchání barev
+   * Práce/míchání se světlem
+   * Monitory, projektory, kamery, atd…
+   * Základní barvy: Red, Green, Blue
+   * Složením základních barev maximální intenzity vzniká bílá barva
+CMYK  
+   * Odpovídá subtraktivnímu míchání barev
+   * Práce/míchání s pigmentem
+   * Tiskárna
+   * Základní barvy: Cyan, Magenta, Yellow,Black(key)
+   * Složením základních barev maximální intenzity vzniká černá barva
+________________
+HSV  
+   * Uživatelsky orientovaný model
+   * Nastavuje odstín, sytost a světlost
+   * Při úbytku světlosti klesá sytost
+HSL
+   * Uživatelsky orientovaný model
+   * Nastavuje odstín, jas a sytost
+   * Při limitech úbytku jasu klesá zároveň i sytost
+Převod barevného prostoru do šedotónového (grayscale)
+   * > 80% odrazu = bílá barva, < 3% odrazu = černá barva
+   * Teoreticky stačí 32-64 stupňů (citlivost oka), prakticky 256
+   * Převod šedotonového (grayscale) na monochromatický
+Dithering
+      * Nahrazení původních hodnot intenzity šedé černými a bílými body
+      * Snaha o vizuálně maximální odpovídající podobu
+      * Zachová rozměry obrázku
+      * Výstup na obrazovku
+Prahování  
+      * Nejprimitivnejší metoda, rozdělení pixelů obrazu podle prahové hodnoty T
+      * Uspokojivé pro obrazy s velkým kontrastem
+      * Výrazná degradace obrázku
+      * Jak zvolit optimální práh? Uživatel, medián, analýza histogramu
+      *   Náhodné rozptýlení
+         * Jednoduchá a rychlá metoda
+         * Zachovává jasové poměry
+         * Rovnoměrná intenzita u velkých ploch
+         * Vhodné pro obrazy s velkými konstantními plochami
+         * ________________
+Distribuce chyby  
+            * Distribuce vznikající chyby okolních pixelů m
+            * Maximální využití vstupní informace
+            * Určení hodnoty G(x, y) podle vybrané metody rozptýlení
+            *             * Následná distribuce chyby sousedem.Různé metody (Floyd, Bayer, Burkes, Stucky)
+Maticové rozptýlení
+               * Porovnání pixelů s odpovídajícími hodnotami distribuční (rozptylovací) matice a prahování
+               * Dithering - plochu obrazu pokryjeme maticemi
+               * Halftoning - každý pixel nahradíme maticí
+               *                *                *                *                *   Halftoning
+                  * Každý pixel nahrazený vzorem černých a bílých bodů dané hodnoty
+                  * Zvětšuje rozměry obrázku
+                  * Výstup do tiskárny
+Úsečka
+                  *         
+                  * Obecná rovnice
+                     *  
+                        * Parametrické vyjádření
+                        *                         *                         * U1 = x2-x1, u2 = y2-y1
+                           * Směrnicový tvar priamky
+                           *  
+                           * y je funkčná hodnota (výsledok funkcie) 
+                           * x je argument funkcie 
+                           * q je offset po Y-ovej ose 
+                           * k je smernica k = dy/dx dy=Y2-Y1 dx=X2-X1.
+                           *  C:\CBACE625\DFB03B76-9A54-41DD-9B6B-6E56929D9880_files\image005.png 
+
+Algoritmy
+Většina z nich funguje jenom v prvním kvadrantu a pouze v případě že roste od počátku bodu P1 ke koncovému bodu P2, ostatní případy je třeba převést na tento případ
+DDA
+                              * Digital Differential Analyser
+                              * Jeden z prvních algoritmů rasterizace úsečky
+                              * Používá floating-point aritmetiku
+Princip
+                              * Vykresluje po pixelu od bodu P1 k bodu P2
+                              * K ose x připočítáme přírůstek 1
+                              * K ose y připočítáme velikost směrnice úsečky a zaokrouhlí se na nejbližší číslo
+LineDDA(int x1, int y1, int x2, int y2) {
+   double k = (y2-y1) / (x2-x1);
+   double y = y1;
+
+   for (int x = x1; x <= x2; x++) {
+       draw_pixel( x, round(y));
+       y += k;
+  }
+}
+	
+
+
+
+#define FRAC_BITS 8
+
+LineDDAFixed(int x1, int y1, int x2, int y2) {
+   int k = (y2 - y1) << FRAC_BITS / (x2 - x1);
+   int y = y1 << FRAC_BITS;
+
+   for (int x = x1; x <= x2; x++) {
+       draw_pixel( x, y >> FRAC_BITS);
+       y += k;
+   }
+}
+	Bresenhamův (Midpoint) algoritmus
+                              * Nejčastěji používaný algoritmus na rasterizaci úsečky
+                              * Používá celočíselnou aritmetiku, sčítání a porovnávání
+                              * Efektivnější a lehčí implementace
+Princip
+                              * Vykreslujeme po pixelu od bodu P1 k bodu P2
+                              * K ose X připočítáme přírůstek 1
+                              * O posunu v ose Y rozhodujeme podle znamínek (Prediktoru)
+LineBres(int x1, int y1, int x2, int y2) {
+   int dx = x2 - x1, dy = y2 - y1;
+   int P = 2*dy - dx;
+   int P1 = 2*dy, P2 = P1 - 2*dx;
+    int y = y1;
+
+    for (int x = x1; x <= x2; x++) {
+       draw_pixel(x, y);
+        if (P >= 0)
+            P += P2; y++;
+        else
+            P += P1;
+  
+
+	  Vyplňování
+Typy oblastí
+                              * Rastrové oblasti - hranice popsaná v rastrové matici hodnotou pixelu na hranici nebo barvou oblasti
+                              * Vektorové oblasti - hranice popsaná seznamem vektorových entit (úsečka, kružnice, elipsa, křivka,...)  
+Dělení oblasti pomocí geometrie
+                                 * Konvexní - pro libovolné dva body platí, že jejich spojnica leží v oblasti (neprotíná je hranice)  
+                                 * Konkávní - oblast která není konvexní
+                                 * S vnitřními otvory - hranice je tvořena nezávislými smyčkami, obrysem a otvory  
+Orientace
+                                    * Vektorový součin dvou sousedních hran
+Typy vyplňování
+                                    * Paritní vyplňování - hranice odděluje vyplněný a nevyplněný prostor
+                                    * Vnitřní vyplnění - jsou vyplněné všechny body které nejsou mimo oblast
+                                    * Nenulové vyplňování
+Druhy výplní
+                                    * Konstantní barva (solid)
+                                    * Jednoduchý čárový vzor (hatch)
+                                    * Složitější obecný vzor nebo textura (pattern)
+Řádkové výplně  
+                                    1. Pro každý řádek v oblasti vytvoříme seznam souřadnic průsečíků x, vodorovné hrany vynecháváme
+                                    2. Seřadíme seznam podle souřadnic x
+                                    3. Vykreslíme vodorovné úseky mezi lichými (nepárnymi) a sudými (párnymi) průsečníky
+                                    4. V případě že počet průsečníků je lichý (nepárny), tak v lokálním extrému vykreslíme úsek obou hran
+
+
+Šrafování, gradient  
+                                    * Vyplnění vodorovnou šrafou - přeskakování řádků pomocí parametru
+                                    * Vyplnění gradientem - parametr inkrementující se každým řádkem
+Inverzní řádkové vyplňování  
+                                    1. Najdeme si maximální x
+                                    2. Pro každou hranu oblasti si získáme maximální a minimální Y
+                                    3. Pro každý řádek invertujeme pixely směrem doprava od hrany
+                                    4. Po vyplnění je nutné překreslit původní hranu
+  Pinedův algoritmus
+                                    * Vyplňovaná oblast je popsaná seznamem hran, které rozděluje rovinu na poloroviny
+                                    * Nejčastěji se používá pro trojúhelníky - zaručená konvexnost
+                                    * Body roviny, které leží na kladné straně všech polorovin jsou ve vnitřní oblasti
+                                    * Není nutné vyhodnocovat hranovou funkci pro každý bod, můžeme to optimalizovat získáním souřadnic x/y hodnoty
+                                    *                                       * Je-li hodnota  >= 0, pak bod Pleží uvnitř nebo na hranici oblasti.
+                                    * hranová funkcia je vektorový súčin smerového vektoru priamky a vektoru z počiatku priamky do daného bodu  
+
+
+  
+
+Semínkové vyplňování
+                                       * Startovací bod - semínko ve vnitřní oblasti, které se rozšiřuje do 4 nebo 8 stran, nové pixely se stávají semínkem  
+                                       * Hranice jsou definované barvou přes kterou se nedá dostat
+Barycentrické rovnice
+                                          *                                           *                                           *                                           * Výpočet souřadnic
+  
+
+  
+
+  
+
+Transformace
+Lineární transformace
+                                             * Zobrazení f z jednoho vektorového prostoru do druhého f, který zachovává lineární kombinaci
+  
+
+Afinní transformace
+                                             * Zobrazení f z jednoho vektorového prostoru do druhého f, který zachovává kolinearitu (body ležící na přímce budou ležet na přímce i po zobrazení) a dělící průměr. 
+                                             * Lineární transformace následovaná posunem homogenní souřadnice ve 2D s kartézskými souřadnicemi [x,y] je uspořádání trojice [x,y,w] a platí x = X/w, y = Y/w. Souřadnici w nazýváme váha bodu 
+
+
+Posunutí ve 2D                Rotace ve 2D                Změna měřítka ve 2D                Zkosení ve 2D  
+  
+
+  
+
+
+
+
+
+
+
+Body popsané homogenními 3D souřadnicemi [x,y,z,w] kde w = 1 pro bod w = 0 pro vektor
+Posunutí ve 3D    
+  Změna měřítka ve 3D
+  Zkosení ve 3D
+  Rotace ve 3D
+  Viewport transformace
+  
+
+Násobení matic: https://www.youtube.com/watch?v=9BGxMrrQkgk
+
+
+________________
+Aliasing
+Je nežádoucí jev, který vzniká nízkofrekvenčním vzorkováním signálu, který má relativně vysokou frekvenci, prejavuje sa zubatými hraniami, poruchami textúr
+Proč vzniká?
+                                             * Souvisí se způsobem vzorkování vstupních informací pro získávání výstupních
+                                             * Vzorkujeme s příliš malou vzorkovací frekvencí
+                                             * Vzorkujeme příliš pravidelně
+                                             * Vzorkujeme příliš přesně
+Shannonův vzorkovací teorém
+                                             * Přesná rekonstrukce spojitého, frekvenčně omezeného signálu z jeho vzorku je možné tehdy, pokud byl vzorkovaný frekvencí alespoň dvakrát vyšší, než je maximální frekvence rekonstruovaného signálu
+Zvýšení vzorkovací frekvence
+                                             * Zvýšení rozlišení výstupních dat
+                                             * Odpovídá shanonvému teorému
+                                             * Příliš velká náročnost výstupních dat
+Přefiltrování výstupních dat
+                                             * Vyhlazení, rozmazání výstupních dat
+                                             * Implementovaný pomocí postprocessingu
+                                             * Ztráta detailů výstupních dat
+Předfiltrování vstupních dat
+                                             * Zachovává rozlišení výstupních dat
+                                             * Zvyšuje vzorkovací frekvenci - více vstupních vzorků na jeden výstup
+                                             * Ztráta výkonu
+Supersampling
+                                             * Odpovídá metodě předfiltrování
+                                             * Každý pixel je rozdělený na několik vzorků
+                                             * Výsledná hodnota pixelu je složená z hodnot vzorku
+                                             * Složení vzorků zajistí konvoluční filtr
+                                             * Vyhlazuje celý výsledný obraz (textury, hrany)
+                                             * Výrazný pokles výkonu
+________________
+Multisampling
+                                             * Adaptivní supersampling
+                                             * Hustější vzorkování jen v oblasti hran, gradientech
+                                             * Výrazné vyhlazení hrany, méně textury
+                                             * Menší pokles výkonu
+Ořezávání objektů
+  
+
+ Dosadíme polohy hranice okna XP pro svislé nebo  Yp Ymin/max pro vodorovné hranice okna.  Yp  Yp  x  Xmin/ max  (x  min/ max ¯  Y min/ max  ¯ XI  -YI)  + YI  + XI  
+  
+
+  
+
+
+
+Algoritmus Cohen-Sutherland
+                                             * Koncové body P1, P2 označené binárními kódy C1,C2 oblastí
+                                             * Devět kódů oblastí -> 4 bity, 0000 = okno
+
+
+Liang-Barsky
+                                             * Hledáme část úsečky ležící ve vnitřku okna anebo hodnotu parametru u
+  
+
+Sutherland-Hodgman  
+                                             * Ořezávání celým oknem zjednodušené na ořezávání jenom jednou stranou
+                                             * Komplikovaná realizace polygonu se vnitřními otvory
+                                             * Ořezávaný polygon může být definovaný jenom uzavřenou smyčkou hraničních úseček
+                                             * Postupně pro každou hranu otestujeme úsečky
+                                             * Pokud je celá uvnitř -> ulož do výsledného seznamu oba vrcholy
+                                             * Protíná stranu -> vypočítej průsečík a ulož do seznamu
+                                             * Vnější strany zahazujeme
+Weiter-Atherton
+                                             * Výpočet průsečíků přes Liang-Barsky
+                                             * Pomocné orientované seznamy vrcholů a průsečíků
+        P - seznam vrcholů a průsečíků na polygonu
+        W - seznam vrcholů a průsečíků na okně
+I - seznam průsečíků na vstupu do okna
+O - seznam průsečíků na výstupu z okna
+C - seznam ořezaných polygonů na vnitřku okna
+R - seznam odřezků mimo okna
+Postup  
+                                             * Polygon uvnitř okna, ukládáme do C
+                                             * Start v P na prvním vrcholu z I
+                                             * Pokud jsme v P nebo W na vrcholu z I pokračujeme po P
+                                             * Pokud jsme v P nebo W na vrcholu z O pokračujeme po W
+                                             * Odřezky mimo okno, ukládáme do R
+                                             * Start v P na prvním vrcholu z O
+                                             * Pokud jsme v P nebo W na vrcholu z O pokračujeme po P
+                                             * Pokud jsme v P nebo W na vrcholu z I pokračujeme po W
+        
+        Ortogonální projekce - Kvádr                Perspektivní projekce - Jehlan
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+________________
+Křivky  
+Využití
+                                             * Definice fontů
+                                             * Kreativní grafika
+                                             * Šablonování
+                                             * Určování dráhy objektů při animaci
+Druhy křivek
+                                             * Interpolační křivka - křivka přímo prochází body
+                                             * Aproximační křivka - křivka neprochází body (Řídicí body)
+                                             * Racionální křivka - váhové koeficienty řídících bodů, invariantní vůči perspektivní projekci
+                                             * Neracionální křivka - tvar křivky ovlivňuje změnu polohy řídících bodů, nejsou invariantní vůči perspektivní projekci
+  
+
+Jiný zápis
+  
+
+Spline křivka  
+                                             * Spojované ze segmentů po částech polynomiální křivky
+Fergusonova kubika
+                                             * Nejčastější interpolační křivka
+                                             * Určena dvěma koncovými body a dvěmi tečnými vektory 
+                                             * Navázání segmentů - totožnost koncových bodů C0 a shodnost tečných vektorů C1
+                                             * Přirozený spline - maticové řešení celé křivky pro nulové koncové tečné vektory
+Kochanek-Bartels spline
+                                                * Interpolační spline křivka
+                                                * Využívá Fergusonových kubik
+                                                * Určeno množinou N interpolovaných bodů P a odpovídajicími koeficienty a,b,c
+                                                * Koeficienty určují chování křivky v bodě
+                                                * Definice dráhy pohybu objektů, konstantní rychlost bodu  
+Catmull-Rom spline
+                                                   * Interpolační spline křivka určená množinou N bodů 
+                                                   * Tečný vektor  je rovnoběžný k vektoru 
+                                                   * Kochanek-Bartels s nulovými koeficienty
+                                                   * Křivka vychází z bodu a končí v bodu 
+                                                   * Interpolací koncových bodů zajistí jejich opakování
+Beziérovy křivky  
+                                                      * Polynomiální křivka s použitím Bernsteinových polynomů 
+                                                      * Křivka stupně n určena n + 1 body
+                                                      * Prochází koncovými body
+                                                      * Polynomy mají nezápornou hodnotu, jednotkový součet
+Algoritmus de Casteljau 
+                                                         * Rekurentní algoritmus vykreslování Bezierových křivek
+                                                         * Plyne z rekurentní definice pro Bernsteinovy polynomy
+                                                         * Úseky řídícího polynomu jsou děleny v poměru hodnot t a 1 − t
+                                                         * Opakovaný výpočet pro různé hodnoty t se zvoleným krokem
+                                                         * Spojování vypočtených bodů úsečkami. 
+  
+
+Beziérovy kubiky  
+                                                         * Segment popsaný čtyřmi řídícími body
+                                                         * Nelokální změna tvaru posunem jednoho bodu
+                                                         * Invariantní k lineárním transformacím
+Algoritmus de Casteljau a Beziérovy kubiky 
+                                                         * "Divide and Conquer"– rekurzivní dělení na dvě pod křivky
+                                                         * t = 0.5
+                                                         * Dostatečně rovná křivka není dále dělena, ale rovnou vykreslena
+                                                         * Minimální vzdálenost bodů na úrovni úhlopříčky pixelu
+  
+
+________________
+Reprezentace 3D modelů
+Požadavky na model
+                                                         * Obecnost - popis co nejrozsáhlejší třídy objektů
+                                                         * Úplnost - úplně popisuje daný objekt
+                                                         * Jednoznačnost - možné vyhodnotit jenom jedním způsobem
+                                                         * Přesnost - přesnost popisu objektu
+                                                         * Regulérnost - nemožnost vytvořit nereálnou reprezentaci
+                                                         * Konzistence vůči vybraným operacím - výsledek operace pro těleso stejné třídy je opět těleso této třídy
+                                                         * Kompaktnost - malá paměťová náročnost
+                                                         * Efektivnost chování - možnost efektivní implementace operací a těles
+Manifold objekt
+                                                         * Vyrobitelný objekt, každá hrana sdílí jen dvě stěny
+Non-manifold objekt
+                                                         * Nevyrobitelný objekt, hrana sdílí dvě části tělesa
+Eulerova rovnice
+                                                         *                                                          *   Konstrukce geometrie - CSG  
+                                                            * Constructive Solid Geometry
+                                                            * Možnost vzniku singularity
+                                                            * Objekt je popsán stromem (octree) 3D primitiv, transformací a booleovských operací
+                                                            * Po každé operaci proběhne regenerace stromu 
+                                                            * Možnost parametrizace operací - parametrické modelování (CAD/CAM)
+                                                            * Neobsahuje informace o povrchu objektu - netriviální zobrazení
+                                                            * Strojní inženáženýrství, architektura
+Šablonování  
+                                                            * Pohyb křivky, plochy nebo tělesa po zvolené kategorii
+                                                            * Nejčastější posun po 2D křivce
+                                                            * Může být součástí CSG operací
+                                                            * Využívá se  invariance spline křivek a ploch vůči lineárním transformacím
+________________
+Dekompoziční (objemové) modely
+                                                            * Diskrétní popis objektu dekompozicí na elementární objektové jednotky (kostky, hranoly)  
+                                                            * Vzorkování objektů, vyčíslení obsazeného objemu
+                                                            * Voxel - volumetric pixel
+                                                            * Nejčastěji pravidelná Kartézská mřížka
+                                                            * Medicína, strojírenství a geologie
+Hraniční modely - B-rep
+                                                               * Boundary representation
+                                                               * Objekt popsaný přes povrch - hranice
+                                                               * Informace o vnitřní struktuře nejsou uloženy
+                                                               * Objekty definované pomocí vrcholů(bodů), hran(úsečky, křivky) a stěn(polygon)
+                                                               * Drátový model (málo informací, rychlé orientační zobrazení), polygonální model (jednoznačný, méně přesný, HW podpora)
+Level of Detail - LOD
+                                                               * Vzdálené objekty není potřeba zobrazovat v plné kvalitě
+                                                               * Vytváří se několik úrovní detailů a přepíná se mezi nimi podle vzdálenosti
+                                                               * Redukce nedostupných detailů
+                                                               * Redukce počtu prvků při zachování tvaru objektu
+Osvětlení
+Odraz
+Ideální
+                                                               * Difuzní - odraz do všech směrů (kulový)
+                                                               * Zrcadlový - směrový, symetricky podle normály povrchu
+Reálný
+                                                               * Smíšený difuzní a zrcadlový - odrazové těleso
+Osvětlení
+                                                               * Povrch je definovaný svými vlastnostmi (hladkost, drsnost, lesklost, matnost)
+                                                               * Odrazová funkce, intenzita odrazového světla podle polohy, barvy a intenzity zdroje a směru světla
+                                                               * Modely: empirické (rychlé, zjednodušené), realistické (fyzikální podstata , náročnost)
+________________
+Phongův osvětlovací model  
+                                                               * Empirický model
+                                                               * K difuzi přidává reflekci, koeficient reflekce Rs a ostrosti Ns
+                                                               * Ideálním reflekce, odraz je symetrický podle normály
+                                                               * Intenzita reflekce závisí na směru odrazu a směru k pozorovateli
+                                                               * Ambientní složka, světelný šum, rozptýlené světelné pozadí
+                                                               * NA KONCI JE VYRIESENA ULOHA
+
+
+BRDF
+                                                               * Fyzikálně založený model
+                                                               * Realistické zobrazení
+                                                               * Specializace na jednotlivé efekty nebo materiály (voda, oheň,...)
+                                                               * Náročnější výpočet, možnost modelování světelných zdrojů
+Flat shading
+                                                               * Pro každý polygon se osvětlovacím modelem vyhodnotí středový pixel
+                                                               * Celý polygon má konstantní barvu, nezohledňuje se zakřivení povrchu objektu
+                                                               * Vhodné pro jednoduché zobrazení
+                                                               * Ľahká implementácia v HW, podporuje OpenGL
+Gouraud shading
+                                                               * Pro polygon se vyhodnotí pixely na vrcholech
+                                                               * Při rasterizaci polygonů probíhá interpolace barev
+                                                               * Je potřeba znát průměrné normály ve vrcholech
+                                                               * Zohledňuje se zakřivení povrchu objektu
+                                                               * Dostatečně realistické pro běžné aplikace
+                                                               * Ľahká implementácia v HW, podporuje OpenGL
+Phong shading
+                                                               * Při rasterizaci probíhá interpolace normál ve vrcholech
+                                                               * Osvětlovací model se počítá pro každý pixel
+                                                               * Je potřeba znát průměrné normály ve vrcholech
+                                                               * Zohledňuje se zakřivení povrchu objektu
+                                                               * Velmi kvalitní výsledek, realistické zobrazení
+                                                               * Náročná implementácia, v OpenGL cez shadery
+
+
+________________
+
+
+Viditelnost
+Hidden surface removal
+                                                               * Viditelné plochy jsou orientované k pozorovateli
+                                                               * Takovéto plochy mají normálu směrem k pozorovateli
+                                                               * Získáme skalárním součinem s vektorem pohledu
+                                                               * Hrana mezi viditelnými plochami je potenciálně viditelná
+                                                               * Hrana mezi neviditelnými plochami je neviditelná
+                                                               * Hrana mezi viditelnou a neviditelnou plochou je obrysová
+Algoritmy viditelnosti
+                                                               * Objektové - pro každý objekt scény hledá viditelné části
+                                                               * Obrazové - pro každý pixel obrazu hledá viditelný objekt
+                                                               * Kombinace - předzpracování a třídění dat
+Robertsův algoritmus  
+                                                               * Klasický vektorový algoritmus
+                                                               * Dělení potencionálně viditelných hran na úseku kde se mění viditelnost
+                                                               * Vykreslení viditelných úseků
+                                                               * Postup
+                                                               1. Získat viditelné a obrysové hrany.
+                                                               2. Rozdělit na úseky konstantní viditelnosti (průsečíky s obrysovými  hranami).
+                                                               3. Testovat viditelnost úseků, podle vzdálenosti průsečíku a zakrytí. 
+                                                               1. Viditelnost se mění na obrysových  hranách.
+                                                               2. Střídají se úseky viditelné a zakryté.
+Plavajicí horizont
+                                                               * Vizualizace 3D grafu funkcí
+                                                               * Vykreslování řezu v rovině XZ a YZ odpředu dozadu
+                                                               * Vykreslení úseku řezu které jsou mimo oblast horního a dolního horizontu
+Malířův algoritmus
+                                                               * Vykreslování objektu odzadu dopředu - zobrazení podle vzdálenosti
+Dělení obrazu
+                                                               * Dělení okna na čtvrtiny pokud není vyplněné jedním objektem
+Z-buffer
+                                                               * Pole
+                                                               * Stará sa o problém viditeľnosti, rieši ktorý pixel v scéne bude vykreslený 
+                                                               1. O akú dátovú štruktúru sa jedná = 2D pole
+                                                               2. Akú ma veľkosť = framebuffer - velkost rozlíšení color bufferu
+                                                               3. Aké hodnoty obsahuje = Obsahuje Z súradnice najbližších bodov ploch ale stačí do testu napísať Float
+                                                               4. Pracuje sa v GPU
+                                                               5. Pre aky typ 3D objektov je z buffer vhodný? = Netransparentné objekty, polygony, trojuholníky
+                                                               6. Implicitní plocha[a]
+Ray-casting  
+                                                               * Rastrový obrázkový algoritmus, slúži na riešenie viditeľnosti 
+                                                               * Vrhanie paprskov z miesta pozorovateľa (planárne, perspektívne) 
+                                                               * Priesečníky paprskov so všetkými objektmi pozdĺž ich dráhy, výber najbližšieho 
+                                                               * Pomalý, kvalitné výsledky 
+Plusy / Mínusy: 
+                                                               * Ľahká realizácia vizuálnych efektov 
+                                                               * Dá sa použiť pri zobrazení CSG modelov, implicitných plôch a pod. 
+                                                               * Ľahká paralelizácia ale náročnejšia HW implementácia 
+Textura
+Textura
+                                                               * Popis detailní struktury povrchu a materiálu objektu, nezávislý na jeho geometrii
+                                                               * Jeden vzorek textury se nazývá texel
+Texturování
+                                                               * Proces nanášení textur na geometricky definovaný povrch objektu
+                                                               * Textura pomáhá odlišovat a rozpoznávat jednotlivé objekty a zvyšuje úroveň reálnosti jejich zobrazení
+Datové textury
+                                                               * Navrhnuté a uložené v paměti
+                                                               * rychlé vykreslování
+                                                               * Datově náročné
+                                                               * Dochází k aliasu
+Procedurální textury
+                                                               * Dynamické 
+                                                               * Parametrické 
+                                                               * Spojité 
+                                                               * Pomalejší
+                                                               * Datově nenáročné
+                                                               * Menší náchylnost k aliasu
+Způsoby získávání hodnoty
+                                                               * Bez interpolace - zaokrouhlíme souřadnice v prostoru textury na nejbližší celočíselnou hodnotu
+                                                               * Bilineární interpolace - lineární interpolace z nejbližších čtyř hodnot
+                                                               * Polynomická interpolace - interpolace ze širšího okolí polynomu vyššího stupně
+UV mapování
+                                                               * Mapování realistických textur (přesné mapování, složité vzory, důležité detaily)
+                                                               * Topologicky složité tělesa
+Texturou nanášená informace
+                                                               * Barva povrchu
+                                                               * Průhlednost
+                                                               * Optické vlastnosti povrchu (difuze, odrazivost)
+                                                               * Modifikace normály
+                                                               * Modifikace geometrie
+                                                               * Zrcadlení okolí
+                                                               * Osvětlení
+Typy textúr ktoré sa nanášajú na 3D objekty: 
+                                                               1. Odraz svetla spôsobuje odraz okolitých objektov (lesklosť) na povrch textúry. Preto ju nazývame aj mapovanie okolitého prostredia (environment mapping). 
+                                                               2. Zmena normálového vektora opticky mení tvar povrchu, bez toho aby sa zmenila geometria objektu. Príkladom môže byť hrboľatá textúra (bump mapping) 
+                                                               3. Drsnosť povrchu podobne ako pri zmene normálového vektora opticky mení tvar povrchu (Displacement mapping). < Nemení ho iba opticky ale tiež upravuje jeho vertexy(siluetu) 
+                                                               4. Priehľadnosť sa nemusí byť na celom povrchu konštantná, ale môže sa meniť zo zmenou miesta. Pri tom dochádza k zmene geometrických vlastností objektu (Light mapping asi). 
+
+
+
+
+3(4) metódy nanášania textúr: 
+                                                               1. Inverzné mapovacie funkcie 
+                                                               * Povrch objektu je popísaný jednou analytickou funkciou 
+                                                               * Inverznú funkciu je možné použiť ako mapovaciu 
+                                                               * Málo takto popísateľných objektov = guľa, valec, kváder 
+                                                               2. Premietanie textúr 
+                                                               * Textúra sa premieta na objekt (pre ktorý nie je analytická funkcia) z obalového telesa, ktorého analytickú funkciu môžeme určiť 
+                                                               3. Mapovanie 3D textúr 
+                                                               * Jednoduché mapovanie 3D priestoru textúry na povrch telesa (scale) 
+                                                               * Nie je problém s naväzovaním textúry, veľká pamäťová náročnosť 
+                                                               4. UV Mapovanie 
+                                                               * Pri zložitejších objektoch, "objekty sa vyvlečú z kože" 
+                                                               * Presné mapovanie, zložité vzory, dôležité detaily 
+                                                               * Rozmotanie, nanesenie textúry a navlečenie na objekt
+Textúrovacie súradnice (vysvetliť pojem): 
+                                                               * Ako ich pre 3D objekt zadávame ? --> ručne, prípadne automaticky, dva floaty - u,v 
+                                                               * Aké hodnoty nadobúdajú ? --> 0-1 
+                                                               * Čo ich hodnoty predstavujú ? --> umiestnenie textúry na danom mieste (súradnice textúry) 
+ • co může být ještě definičním oborem textury ?  3D souřadnice [ x, y, z I — tzv. „prostorová textura"  — vnitřní struktura materiálu (dřevo, mramor, .  normálový vektor N  — veličina závislá na normále (statické di.fllS.n.ĹQSYČt.lenĺ)  • vektor odrazu R — „environment mapping"  — předem spočítaná data (CPU i spolupráce s GPU) se do  rasterizátoru předávají pomocí zvláštní textury  odraz okolní scény na lesklém povrchu tělesa  mapa osvětlení (dopředu spočítané světlo od více zdrojů,  od plošných zdrojů, složitějším světelným modelem,  
+ 
+
+
+Textúrovanie pomocou súradníc (popis, princíp) 
+                                                               * U väčšiny bežných objektov nie je možné nájsť s jedinú analytickú funkciu popisujúcu povrch 
+                                                               * Preto musíme prevádzať mapovanie po častiach (plochy, polygóny) Spojitosť častí zaistí "Textúrovacie súradnice" 
+                                                               * Tie pre každý povrchový vrchol (napr. uzly polygonálnej siete) objektu definujú zodpovedajúce (u, v) súradnice textúry. 
+                                                               * Hodnoty textúrovacích súradníc medzi definovanými hodnotami vo vrcholoch sú lineárne interpolované (cez jednotlivé polygóny)
+Bump mapping
+                                                               * Modifikace normály za účelem vytvoření plastového/hrbolatého povrchu
+                                                               * Geometrie objektu se nemění
+Displacement mapping 
+                                                               * Efekt plastového/hrbolatého povrchu
+                                                               * Skutečně se mění geometrie objektu
+                                                               * Vhodné pro simulace
+Environmental mapping 
+                                                               * Efekt zrcadlového odrazu okolí na hladkém povrchu
+Normal mapping 
+                                                               * Zjednodušením povrchu ztrácíme normály, které můžeme doplnit normálovou texturou
+Light mapping 
+                                                               * Komplexní řešení osvětlení je náročné a pomalé
+                                                               * Pro real time zobrazení si můžeme osvětlení předpočítat
+MIP mapping 
+                                                               * Řešení aliasu textur zmenšováním textury v závislosti na vzdálenosti od kamery
+                                                               * Uložené do jedné matice 2x rozlišení
+                                                               * Pre jednu textúru sa spravidla vytvára viacero úrovní mipmap, kde každá ďalšia úroveň má polovičný rozmer ako predchádzajúca. 
+                                                               * Ak má napríklad pôvodná textúra rozmer 32x32 pixelov, je vhodné vytvoriť mipmapy o rozmeroch 16x16, 8x8, 4x4, 2x2 až nakoniec 1x1 pixel. 
+                                                               * Tieto mipmapy môžu byť predgenerované a uložené na disku. Pri zmenšení obrázka môže byť použitý vyhladzovací filter. 
+                                                               * Tieto techniky umožňujú zrýchliť textúrovanie malých objektov a zvýšiť ich vizuálnu kvalitu.
+Dodatek
+                                                               * Při zobrazení velkých texturovaných polygonů v perspektivě dochází ke zkreslení textur, přehnutí textury.Vzniká lineární interpolací souřednic nelineárním zkreslením vzdálenosti v perspektivě. 
+                                                               * Řešení: rozdělení polygonů na menší části, když se chyba tolik neprojeví
+
+
+Ray-tracing vs. Radiozita
+
+
+
+
+	Ray-tracing
+	Radiozita
+	Stíny
+	ostré
+	měkké
+	Odrazy okolí na povrchu
+	ano
+	ne
+	Sekundární osvětlení
+	ne
+	ano
+	Zdroje světla
+	bodové
+	plošné
+	Vhodná reprezentace objektů
+	CSG
+	polygonální
+	Řeší viditelnost a zobrazení
+	ano
+	ne
+	
+
+Ray-tracing primárne, sekundárne a tieňové paprsky 
+                                                               1. Primárne 
+                                                               * Vychádzajú z kamery 
+                                                               * Majú spoločný počiatočný bod alebo sú rovnobežné 
+                                                               2. Sekundárne 
+                                                               * Z miesta dopadu primárneho/sekundárneho lúča (paprsku) 
+                                                               * Vznikajú odrazom/lomom svetla 
+                                                               * Chaotickejšie ako primárne 
+                                                               3. Tieňový lúč(stínový paprsek): 
+                                                               * Z miesta dopadu do každého zdroja svetla 
+                                                               * Len ich vidíme/nevidíme 
+                                                               * Presný priesečník nás nezaujíma  C:\CBACE625\DFB03B76-9A54-41DD-9B6B-6E56929D9880_files\image020.png 
+
+
+
+
+
+
+
+
+                                                                  * Ray-tracing je obrazová metóda zatiaľ čo radiozita je komplexná metóda 
+                                                                  * Radiozita nerieši zobrazenie 
+                                                                  * Radiozita umožňuje mäkké odtiene 
+                                                                  * Ray-tracing nerieši sekundárne osvetlenie, Radiozita vie riešiť globálne svetlá 
+Přivrácená, odvrácená plocha
+                                                                  * Když spočítám skalární součin vektoru směřujícímu ke mně a normálového  vektoru plochy a výsledek je kladný, tak je plocha přivrácená ke mně.
+                                                                  *  camera  Vx n x +  COS Œ =  IVI Inl  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+popsat na obrazku Lambertuv osvetlovaci model (vyznacit pismena ze vzorce a popsat vyznam) 
+  
+
+
+
+
+
+
+
+
+
+
+
+3 zložky phonga: 
+                                                                     1. Ambientná = sveteľný šum, rozptýlené sveteľné pozadie 
+                                                                     2. Difúzna = odraz svetla do všetkých smerov = umožňuje nám vidieť objekty, závisí na normále a polohe svetla 
+                                                                     3. Spektakulárna = lesklá zložka udáva intenzitu tej časti svetla, ktorá sa od telesa odráža prevažne v jednom smere podľa zákona odrazu 
+ C:\CBACE625\DFB03B76-9A54-41DD-9B6B-6E56929D9880_files\image029.png 
+
+Phongův osvětlovací model
+  
+
+  
+
+
+
+OpenGL
+  
+
+
+
+Vertex Shader (vstupy, vystupy, vyuzitie): 
+                                                                     * Je program, ktorý beží na vertex procesori. 
+                                                                     * Vertex Shader obsahuje program, ktorý transformuje (presúva, premieta vrcholy na primitíva) 
+                                                                     * Vstupy: “Built in attribute variables”, “User-defined attribute variables”, “Built-in uniform variables” 
+                                                                     * Výstupy: “Special output variables”, “Built-in varying variables”, “User-defined varying variables”. 
+Fragment Shader: 
+                                                                     * Vykonáva operácie nad jednotlivými fragmentami scény (výsledka, teda 2D obrazu), stará sa napríklad o určenie farieb pixelov či zobrazenie textúr vo výslednom renderi 
+Rozdiel medzi fragment a vertex shaderom: 
+                                                                     * Úlohou vertex shaderu je poskytnúť finálnu transformáciu ďalej do grafickej pipeliny 
+                                                                     * Úlohou fragment shaderu je poskytnúť farbu/textúrovanie každému pixelu. 
+ Grafický kontext (cieľ kreslenia): 
+Popis: 
+                                                                     * Je to dátová štruktúra, ktorá drží špecifické informácie potrebné pre kreslenie na rôzne výstupné zariadenia (display, bitmapa, PDF, súbor) 
+Z čoho sa skladá: 
+                                                                     * Parametre výstupného zariadenia (formát obrázku) 
+                                                                     * Šírka a výška kresliacej plochy (rieši aj orezávanie) 
+                                                                     * Transformácia výstupu (device-independent kreslenie) 
+ Window  Printer  Drawing  PDF  
+
+
+
+Perspektivni vs paralelní projekce (vlastnosti paprsku, zachovani rovnobeznosti)
+Perspektívne
+                                                                     * Stredova
+                                                                     * Paprsky vychadzaju z jedneho bodu = paprsky zbýhají
+                                                                     * Nezachováva rovnobežnost hran
+                                                                     * Vzdalenost od stredu ovlivnuje velikost prumetu
+        
+      Paralelni
+                                                                     * Rovnobezna
+                                                                     * Rovnobezne paprsky
+                                                                     * Zachovava rovnobeznost hran
+                                                                     * Vzdalenost od prumetny neovlivnuje velkost prumetu nejčasteji
+                                                                     * Kolme promitani
+
+
+
+
+
+
+World space, local space, screen space, clip space
+  
+
+  
+
+pre T(r, g, b) = {1/3*(P1 + P2 + P3), 1/3*(P1 + P2 + P3), 1/3*(P1 + P2 + P3)} pre C13(r, g, b) = {1/2*(P1 + P3), 1/2*(P1 + P3), 1/2*(P1 + P3)}
+Texturovanie podľa súradníc
+  
+
+
+
+
+
+
+
+  
+
+Plane, plátno
+    https://www.youtube.com/watch?v=O3UFwOJsyco&feature=youtu.be&t=7778 od 1:58:00 
+  
+
+
+
+Vykreslenie kružnice po bodoch  
+[a]toto asi nie 10:15
+https://drive.google.com/file/d/1frZU4A5kq8ZhxWIVmymqAqCWMwYtr_qF/view

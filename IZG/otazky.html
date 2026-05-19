@@ -1,0 +1,1171 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IZG — Příprava na zkoušku</title>
+  <style>
+    :root {
+      --bg-page: #e8e0d4;
+      --bg-panel: #e0d8cc;
+      --bg-page-soft: #f0ebe3;
+      --bg-answer: #fff;
+      --text: #1c2433;
+      --muted: #5c6578;
+      --toc-bg: #1e3a8a;
+      --code-bg: #1e293b;
+      --code-fg: #e2e8f0;
+      --high: #dc2626;
+      --medium: #d97706;
+      --low: #059669;
+      --border: rgba(90, 75, 55, 0.22);
+    }
+
+    * { box-sizing: border-box; }
+
+    html {
+      color: var(--text);
+      background: var(--bg-page);
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0 auto;
+      max-width: min(100%, 960px);
+      padding: 2rem 1.25rem 4rem;
+      font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+      font-size: 1.05rem;
+      line-height: 1.65;
+    }
+
+    header.page-header {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      padding: 2rem 1.5rem;
+      background: var(--bg-panel);
+      border-radius: 16px;
+      border: 1px solid var(--border);
+    }
+
+    h1.title {
+      margin: 0 0 0.5rem;
+      font-size: clamp(1.45rem, 4vw, 2rem);
+      font-weight: 700;
+      color: #0f172a;
+    }
+
+    .subtitle { margin: 0; color: var(--muted); font-size: 0.95rem; }
+
+    .howto {
+      margin: 0 0 2rem;
+      padding: 1rem 1.25rem;
+      background: var(--bg-page-soft);
+      border-radius: 12px;
+      border: 1px dashed #94a3b8;
+      font-size: 0.92rem;
+      color: #334155;
+    }
+
+    .howto code {
+      background: rgba(0,0,0,0.06);
+      padding: 0.1em 0.35em;
+      border-radius: 4px;
+      font-size: 0.88em;
+    }
+
+    nav#TOC {
+      background: var(--toc-bg);
+      color: #e0f2fe;
+      padding: 1.25rem 1.5rem 1.5rem;
+      border-radius: 14px;
+      margin-bottom: 2.5rem;
+    }
+
+    nav#TOC::before {
+      content: "Obsah";
+      display: block;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      margin-bottom: 0.75rem;
+      color: #bae6fd;
+    }
+
+    #TOC ul { margin: 0; padding: 0; list-style: none; }
+
+    #TOC li { margin: 0.3em 0; }
+
+    #TOC a {
+      display: flex;
+      align-items: baseline;
+      gap: 0.35rem;
+      flex-wrap: wrap;
+      color: #cffafe;
+      text-decoration: none;
+      padding: 0.2em 0;
+      border-bottom: 1px solid transparent;
+    }
+
+    #TOC a:hover { color: #fff; border-bottom-color: rgba(255,255,255,0.35); }
+
+    .toc-num { opacity: 0.75; min-width: 1.75rem; }
+
+    .toc-freq {
+      margin-left: auto;
+      font-size: 0.8rem;
+      font-weight: 700;
+      opacity: 0.9;
+    }
+
+    #TOC .tier-high .toc-freq { color: #fecaca; }
+    #TOC .tier-medium .toc-freq { color: #fde68a; }
+    #TOC .tier-low .toc-freq { color: #bbf7d0; }
+
+    article.topic {
+      margin-bottom: 3rem;
+      padding-bottom: 2.5rem;
+      border-bottom: 2px solid #94a3b8;
+    }
+
+    article.topic:last-of-type { border-bottom: none; }
+
+    .topic-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.85rem;
+      margin-bottom: 1.25rem;
+      padding: 1rem 1.15rem;
+      background: var(--bg-page-soft);
+      border-radius: 12px;
+      border-left: 6px solid #1d4ed8;
+    }
+
+    .topic.tier-high .topic-header { border-left-color: var(--high); }
+    .topic.tier-medium .topic-header { border-left-color: var(--medium); }
+    .topic.tier-low .topic-header { border-left-color: var(--low); }
+
+    .topic-num {
+      flex-shrink: 0;
+      width: 2rem;
+      height: 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #1e3a8a;
+      color: #fff;
+      font-weight: 700;
+      font-size: 0.9rem;
+      border-radius: 8px;
+    }
+
+    .topic-header h2 {
+      margin: 0;
+      flex: 1;
+      font-size: clamp(1.1rem, 2.5vw, 1.35rem);
+      line-height: 1.3;
+      font-weight: 700;
+      color: #0f172a;
+    }
+
+    .freq {
+      flex-shrink: 0;
+      font-weight: 800;
+      font-size: 0.95rem;
+      padding: 0.25rem 0.55rem;
+      border-radius: 6px;
+      background: rgba(0,0,0,0.06);
+    }
+
+    .tier-high .freq { color: var(--high); }
+    .tier-medium .freq { color: var(--medium); }
+    .tier-low .freq { color: var(--low); }
+
+    section.answer {
+      background: var(--bg-answer);
+      border-radius: 12px;
+      padding: 1.25rem 1.35rem;
+      border: 1px solid var(--border);
+      min-height: 4rem;
+    }
+
+    section.answer::before {
+      content: "Odpověď";
+      display: block;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--muted);
+      margin-bottom: 0.75rem;
+      font-weight: 600;
+    }
+
+    section.figures {
+      margin-top: 1.25rem;
+    }
+
+    section.figures:empty,
+    section.figures:not(:has(figure)) {
+      display: none;
+    }
+
+    section.figures::before {
+      content: "Obrázky";
+      display: block;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--muted);
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+    }
+
+    p.placeholder {
+      margin: 0;
+      color: var(--muted);
+      font-style: italic;
+    }
+
+    p { margin: 0.75em 0; }
+    ul, ol { margin: 0.75em 0; padding-left: 1.5em; }
+    li { margin: 0.35em 0; }
+
+    code {
+      background: rgba(0,0,0,0.06);
+      padding: 0.12em 0.35em;
+      border-radius: 4px;
+      font-size: 0.92em;
+    }
+
+    pre {
+      background: var(--code-bg);
+      color: var(--code-fg);
+      padding: 1rem 1.15rem;
+      border-radius: 10px;
+      overflow-x: auto;
+      font-size: 0.88rem;
+      line-height: 1.45;
+    }
+
+    pre code { background: transparent; padding: 0; color: inherit; }
+
+    figure {
+      margin: 1rem 0 0;
+      padding: 0;
+    }
+
+    figure img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+      border-radius: 10px;
+      border: 1px solid #a8a29e;
+    }
+
+    figcaption {
+      margin-top: 0.5rem;
+      font-size: 0.9rem;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .figure-grid {
+      display: grid;
+      gap: 1rem;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    }
+
+    footer {
+      margin-top: 2rem;
+      text-align: center;
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+  
+    table { width: 100%; border-collapse: collapse; margin: 1em 0; }
+    th, td { border: 1px solid #cbd5e1; padding: 0.4em 0.6em; }
+
+  
+    section.answer h3 {
+      margin: 1.5rem 0 0.5rem;
+      font-size: 1.12rem;
+      font-weight: 700;
+      color: #0f172a;
+    }
+    section.answer h3:first-of-type { margin-top: 0; }
+    section.figures {
+      max-width: 750px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    figure img {
+      width: auto;
+      height: auto;
+      max-width: min(750px, 100%);
+      max-height: 350px;
+      object-fit: contain;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .figure-grid figure img {
+      max-width: 100%;
+      max-height: 350px;
+    }
+
+
+  </style>
+</head>
+<body>
+  <header class="page-header">
+    <h1 class="title">IZG — Příprava na zkoušku</h1>
+    <p class="subtitle">35 nejčastějších témat · zdroj: IZG Ultimate Guide · seřazeno podle četnosti</p>
+  </header>
+
+  <p class="howto"><em>Zdroj:</em> IZG Ultimate Guide</p>
+
+  <nav id="TOC" role="doc-toc">
+    <ul>
+      <li class="tier-high"><a href="#q01-maticov-operace-vypo-t-n-sou-adnic-podle"><span class="toc-num">1.</span> maticové operace (vypočítání souřadnic podle matice, násobení, vytvoření matice, ...) <span class="toc-freq">14×</span></a></li>
+      <li class="tier-high"><a href="#q02-raytracing"><span class="toc-num">2.</span> raytracing <span class="toc-freq">8×</span></a></li>
+      <li class="tier-high"><a href="#q03-phong"><span class="toc-num">3.</span> Phong <span class="toc-freq">8×</span></a></li>
+      <li class="tier-high"><a href="#q04-st-nov-n"><span class="toc-num">4.</span> stínování <span class="toc-freq">7×</span></a></li>
+      <li class="tier-high"><a href="#q05-opengl-pipeline"><span class="toc-num">5.</span> OpenGL pipeline <span class="toc-freq">7×</span></a></li>
+      <li class="tier-medium"><a href="#q06-jak-poznat-p-ivr-cenou-odvr-cenou-stranu"><span class="toc-num">6.</span> jak poznat přivrácenou / odvrácenou stranu objektu <span class="toc-freq">6×</span></a></li>
+      <li class="tier-medium"><a href="#q07-z-buffer"><span class="toc-num">7.</span> z-buffer <span class="toc-freq">6×</span></a></li>
+      <li class="tier-medium"><a href="#q08-dkov-vyplnov-n"><span class="toc-num">8.</span> řádkové vyplnování <span class="toc-freq">6×</span></a></li>
+      <li class="tier-medium"><a href="#q09-textury-u-3d-model"><span class="toc-num">9.</span> textury u 3D modelů <span class="toc-freq">6×</span></a></li>
+      <li class="tier-medium"><a href="#q10-pined-v-algoritmus"><span class="toc-num">10.</span> pinedův algoritmus <span class="toc-freq">5×</span></a></li>
+      <li class="tier-medium"><a href="#q11-vertex-fragment-shader"><span class="toc-num">11.</span> vertex/fragment shader <span class="toc-freq">5×</span></a></li>
+      <li class="tier-medium"><a href="#q12-radiozita-vs-raytracing"><span class="toc-num">12.</span> radiozita vs raytracing <span class="toc-freq">5×</span></a></li>
+      <li class="tier-medium"><a href="#q13-aplikace-vytvo-en-operace-v-p-edchoz-m-b"><span class="toc-num">13.</span> aplikace vytvořené operace v předchozím bodě <span class="toc-freq">4×</span></a></li>
+      <li class="tier-medium"><a href="#q14-rgb-cmyk"><span class="toc-num">14.</span> RGB/CMYK <span class="toc-freq">4×</span></a></li>
+      <li class="tier-medium"><a href="#q15-dda-s-fixed-point-aritmetikou"><span class="toc-num">15.</span> DDA s fixed point aritmetikou <span class="toc-freq">3×</span></a></li>
+      <li class="tier-medium"><a href="#q16-aditivni-substraktivni-model"><span class="toc-num">16.</span> aditivni / substraktivni model <span class="toc-freq">3×</span></a></li>
+      <li class="tier-medium"><a href="#q17-pseudokod-vykresleni-krivky"><span class="toc-num">17.</span> pseudokod vykresleni krivky <span class="toc-freq">3×</span></a></li>
+      <li class="tier-medium"><a href="#q18-alias"><span class="toc-num">18.</span> alias <span class="toc-freq">3×</span></a></li>
+      <li class="tier-medium"><a href="#q19-b-rep"><span class="toc-num">19.</span> B-rep <span class="toc-freq">3×</span></a></li>
+      <li class="tier-medium"><a href="#q20-mip-mapping"><span class="toc-num">20.</span> MIP mapping <span class="toc-freq">3×</span></a></li>
+      <li class="tier-medium"><a href="#q21-brassenham-v-algoritmus"><span class="toc-num">21.</span> Brassenhamův algoritmus <span class="toc-freq">3×</span></a></li>
+      <li class="tier-medium"><a href="#q22-parametrick-sm-rnicov-tvar-p-mky"><span class="toc-num">22.</span> parametrický/směrnicový tvar přímky <span class="toc-freq">3×</span></a></li>
+      <li class="tier-low"><a href="#q23-algoritmus-de-casteljau"><span class="toc-num">23.</span> algoritmus De Casteljau <span class="toc-freq">2×</span></a></li>
+      <li class="tier-low"><a href="#q24-o-ez-weiler-artheton"><span class="toc-num">24.</span> ořez Weiler-Artheton <span class="toc-freq">2×</span></a></li>
+      <li class="tier-low"><a href="#q25-textury-u-trojuhelniku"><span class="toc-num">25.</span> textury u trojuhelniku <span class="toc-freq">2×</span></a></li>
+      <li class="tier-low"><a href="#q26-texturovac-sou-adnice"><span class="toc-num">26.</span> texturovací souřadnice <span class="toc-freq">2×</span></a></li>
+      <li class="tier-low"><a href="#q27-shannon-v-vzorkovac-teor-m"><span class="toc-num">27.</span> Shannonův vzorkovací teorém <span class="toc-freq">2×</span></a></li>
+      <li class="tier-low"><a href="#q28-multisampling-supersapling"><span class="toc-num">28.</span> multisampling/supersapling <span class="toc-freq">2×</span></a></li>
+      <li class="tier-low"><a href="#q29-grafick-kontext"><span class="toc-num">29.</span> grafický kontext <span class="toc-freq">2×</span></a></li>
+      <li class="tier-low"><a href="#q30-halftoning-dithering"><span class="toc-num">30.</span> halftoning/dithering <span class="toc-freq">2×</span></a></li>
+      <li class="tier-low"><a href="#q31-perspektivni-vs-paralelni-projekce"><span class="toc-num">31.</span> perspektivni vs paralelni projekce <span class="toc-freq">2×</span></a></li>
+      <li class="tier-low"><a href="#q32-barycentricke-souradnice"><span class="toc-num">32.</span> barycentricke souradnice <span class="toc-freq">2×</span></a></li>
+      <li class="tier-low"><a href="#q33-lambertuv-osvetlovaci-model"><span class="toc-num">33.</span> lambertuv osvetlovaci model <span class="toc-freq">1×</span></a></li>
+      <li class="tier-low"><a href="#q34-rovnice-k-ivky"><span class="toc-num">34.</span> rovnice křivky <span class="toc-freq">1×</span></a></li>
+      <li class="tier-low"><a href="#q35-paramertick-tvar-k-ivky"><span class="toc-num">35.</span> paramertický tvar křivky <span class="toc-freq">1×</span></a></li>
+    </ul>
+  </nav>
+
+  <article class="topic tier-high" id="q01-maticov-operace-vypo-t-n-sou-adnic-podle">
+    <header class="topic-header">
+      <span class="topic-num" aria-hidden="true">1</span>
+      <h2>maticové operace (vypočítání souřadnic podle matice, násobení, vytvoření matice, ...)</h2>
+      <span class="freq" title="Výskyt na zkouškách">14×</span>
+    </header>
+
+    <section class="answer" aria-label="Odpověď">
+<p><strong>Transformace</strong> — zobrazení z jednoho prostoru do druhého.</p>
+<ul>
+<li><strong>Lineární transformace</strong> zachovává lineární kombinaci vektorů.</li>
+<li><strong>Afinní transformace</strong> zachovává kolinearitu a dělící průměr, je to lineární transformace + posun.</li>
+<li><strong>Homogenní souřadnice 2D:</strong> bod <code>[x, y]</code> → <code>[x, y, w]</code>, platí <code>x = X/w</code>, <code>y = Y/w</code>. Váha <code>w</code> určuje typ (bod/vektor).</li>
+<li><strong>2D operace:</strong> posun, rotace, změna měřítka, zkosení — každá jako matice 3×3.</li>
+<li><strong>Homogenní 3D:</strong> <code>[x, y, z, w]</code>, kde <code>w = 1</code> pro bod, <code>w = 0</code> pro vektor.</li>
+<li><strong>3D operace:</strong> posun, rotace, měřítko, zkosení, viewport transformace.</li>
+</ul>
+<p>Aplikace na bod: násobení souřadnic translační/rotační maticí, po transformaci vydělit homogenní souřadnicí <code>w</code> (perspektiva).</p>
+    </section>
+    <section class="figures" aria-label="Obrázky">
+      <div>
+      <figure>
+        <img src="images/pdf/page05-img01.png" alt="Matice 2D transformací (posun, rotace, měřítko, zkosení)" loading="lazy" />
+        <figcaption>Matice 2D transformací (posun, rotace, měřítko, zkosení)</figcaption>
+      </figure>
+      </div>
+    </section>
+  </article>
+  <article class="topic tier-high" id="q02-raytracing">
+    <header class="topic-header">
+      <span class="topic-num" aria-hidden="true">2</span>
+      <h2>raytracing</h2>
+      <span class="freq" title="Výskyt na zkouškách">8×</span>
+    </header>
+
+    <section class="answer" aria-label="Odpověď">
+<p><strong>Poznámka k názvům:</strong> <em>casting</em> <em>vyslat / vrhnout</em> paprsek z kamery (jako „cast a ray“). <em>Tracing</em> pak opravdu znamená <em>sledovat / trasovat</em> další cestu světla po odrazu nebo lomu. Oba postupy paprsky vysílají, liší se hloubkou toho, co po prvním zásahu ještě počítají.</p>
+<p>U obou metod jde o to, že z kamery (nebo pro každý pixel) vystřelíme paprsek do scény a zjistíme, na co narazí. To je společný základ.</p>
+<p><strong>Ray casting</strong> u toho většinou zůstane u prvního zásahu: co je nejblíž, to vykreslíme, případně ještě zkontrolujeme stín (jestli na bod svítí zdroj, nebo je něco před ním). Jde hlavně o to <em>určit, co je vidět</em>, ne o složité chování světla.</p>
+<p><strong>Ray tracing</strong> na tom staví víc vrstev: po dopadu paprsku posíláme další paprsky a barvu bodu skládáme i z odrazů a lomů. Výsledek vypadá věrohodněji, ale počítá se dál a déle.</p>
+<p>Paprsky u ray tracingu (podle pořadí):</p>
+<ul>
+<li><strong>Primární</strong> — vycházejí z kamery, najdou první průsečík se scénou (co je na pixelu vidět).</li>
+<li><strong>Sekundární</strong> — vycházejí z místa dopadu primárního paprsku po odrazu nebo lomu (zrcadlo, sklo, odlesk).</li>
+<li><strong>Terciární</strong> — vycházejí z místa, kam dopadl sekundární paprsek, tedy další „odraz“ ve stromu paprsků (reálně může pokračovat i hlouběji, dokud nedosáhneme limitu).</li>
+</ul>
+<p>Zjednodušeně: ray casting = „co vidím“, ray tracing = navíc „co se tam ještě odráží a prosvítá“. V konverzaci se pojmy občas pletou, ray tracing je širší a ray casting je v něm často jen první krok.</p>
+    </section>
+
+  </article>
+  <article class="topic tier-high" id="q03-phong">
+    <header class="topic-header">
+      <span class="topic-num" aria-hidden="true">3</span>
+      <h2>Phong</h2>
+      <span class="freq" title="Výskyt na zkouškách">8×</span>
+    </header>
+
+    <section class="answer" aria-label="Odpověď">
+<h3>Phongův osvětlovací model</h3>
+<p>Empirický model — tři složky intenzity:</p>
+<ol>
+<li><strong>Ambientní</strong> — světelný šum, rozptýlené světelné pozadí (konstantní příspěvek).</li>
+<li><strong>Difúzní (Lambert)</strong> — odraz do všech směrů, závisí na normále <code>N</code> a směru ke světlu <code>L</code> (<code>N · L</code>).</li>
+<li><strong>Spekulární</strong> — lesklá složka podle zákona odrazu, závisí na směru odrazu a směru k pozorovateli, koeficient <code>R<sub>s</sub></code>, ostrost <code>N<sub>s</sub></code>.</li>
+</ol>
+
+<h3>Phong shading</h3>
+<p>Při rasterizaci se <strong>interpolují normály</strong> z vrcholů po ploše polygonu. Osvětlovací model (Lambert, spekulární složka, …) se počítá <strong>pro každý pixel</strong> z interpolované normály v daném bodě. Velmi kvalitní výsledek, v OpenGL typicky přes fragment shadery (náročnější než Gouraud).</p>
+
+<h3>Gouraud shading</h3>
+<p>Osvětlení se počítá <strong>jen ve vrcholech</strong> trojúhelníku — u každého vrcholu normála a směr ke světlu, výsledek např. <code>Lambert(D+A)</code> (difúzní + ambientní složka). Barvy ve vrcholech se pak <strong>interpolují</strong> po ploše pomocí barycentrických vah <code>λ<sub>a</sub>, λ<sub>b</sub>, λ<sub>c</sub></code>. Rychlejší a jednodušší než Phong shading, ale u velkých ploch může být vidět Machův pruh (lesk se „rozmazá“ mezi vrcholy).</p>
+    </section>
+    <section class="figures" aria-label="Obrázky">
+      <div class="figure-grid">
+      <figure>
+        <img src="images/phong-shading.png" alt="Phong shading — osvětlení se počítá pro každý pixel" loading="lazy" />
+        <figcaption>Phong shading — osvětlení se počítá pro každý pixel</figcaption>
+      </figure>
+      <figure>
+        <img src="images/gouraud-shading.png" alt="Gouraud shading — osvětlení ve vrcholech, interpolace barev po ploše" loading="lazy" />
+        <figcaption>Gouraud shading — osvětlení ve vrcholech, interpolace barev po ploše</figcaption>
+      </figure>
+      </div>
+    </section>
+  </article>
+  <article class="topic tier-high" id="q04-st-nov-n">
+    <header class="topic-header">
+      <span class="topic-num" aria-hidden="true">4</span>
+      <h2>stínování</h2>
+      <span class="freq" title="Výskyt na zkouškách">7×</span>
+    </header>
+
+    <section class="answer" aria-label="Odpověď">
+<p>Porovnání metod stínování polygonů:</p>
+<table>
+<thead><tr><th>Metoda</th><th>Princip</th><th>Kvalita / HW</th></tr></thead>
+<tbody>
+<tr><td><strong>Flat shading</strong></td><td>Barva z osvětlení ve středu polygonu, celý polygon konstantní</td><td>Nezohledňuje zakřivení, lehké, OpenGL</td></tr>
+<tr><td><strong>Gouraud shading</strong></td><td>Osvětlení ve vrcholech, interpolace barev po ploše</td><td>Zakřivení ano, průměrné normály ve vrcholech, OpenGL</td></tr>
+<tr><td><strong>Phong shading</strong></td><td>Interpolace normál, osvětlení po pixelech</td><td>Nejkvalitnější, shadery, náročnější</td></tr>
+</tbody>
+</table>
+    </section>
+
+  </article>
+  <article class="topic tier-high" id="q05-opengl-pipeline">
+    <header class="topic-header">
+      <span class="topic-num" aria-hidden="true">5</span>
+      <h2>OpenGL pipeline</h2>
+      <span class="freq" title="Výskyt na zkouškách">7×</span>
+    </header>
+
+    <section class="answer" aria-label="Odpověď">
+<p><strong>OpenGL pipeline</strong> — transformace vrcholu z modelového prostoru do obrazovky:</p>
+<ol>
+<li><strong>Model-space</strong> <code>[x, y, z, 1]<sup>T</sup></code> × <strong>Model matrix</strong> (S, T, R — měřítko, posun, rotace) →</li>
+<li><strong>World-space</strong> <code>[x′, y′, z′, 1]<sup>T</sup></code> × <strong>View / Eye matrix</strong> →</li>
+<li><strong>View-space</strong> <code>[x″, y″, z″, 1]<sup>T</sup></code> × <strong>Projection matrix</strong> →</li>
+<li><strong>Clip-space</strong> <code>[x‴, y‴, z‴, w‴]<sup>T</sup></code> — ořez: <code>−w‴ ≤ x‴,y‴,z‴ ≤ +w‴</code></li>
+<li><strong>Perspective division</strong> (dělení <code>w‴</code>) → <strong>NDC</strong> <code>[x⁗, y⁗, z⁗, 1]<sup>T</sup></code>, souřadnice v <code>[−1, +1]</code></li>
+<li><strong>Viewport transform</strong> → <strong>Screen-space</strong> (pixely ve framebufferu)</li>
+</ol>
+<p>Po transformaci vrcholů dál v pipeline:</p>
+<ul>
+<li>rasterizace vytvoří fragmenty</li>
+<li>fragment shader určí barvu a texturu</li>
+<li>z-buffer řeší viditelnost</li>
+</ul>
+    </section>
+    <section class="figures" aria-label="Obrázky">
+      <div>
+      <figure>
+        <img src="images/opengl-pipeline.png" alt="Pipeline transformací: model → world → view → clip → NDC → screen" loading="lazy" />
+        <figcaption>Pipeline transformací: model → world → view → clip → NDC → screen</figcaption>
+      </figure>
+      </div>
+    </section>
+  </article>
+  <article class="topic tier-medium" id="q06-jak-poznat-p-ivr-cenou-odvr-cenou-stranu">
+    <header class="topic-header">
+      <span class="topic-num" aria-hidden="true">6</span>
+      <h2>jak poznat přivrácenou / odvrácenou stranu objektu</h2>
+      <span class="freq" title="Výskyt na zkouškách">6×</span>
+    </header>
+
+    <section class="answer" aria-label="Odpověď">
+<p>Viditelné plochy jsou orientované k pozorovateli — normála směřuje k pozorovateli.</p>
+<p><strong>Test přivrácené strany:</strong> skalární součin vektoru <strong>pohledu</strong> <code>V</code> (od povrchu ke kameře) a <strong>normály</strong> <code>n</code> plochy:</p>
+<ul>
+<li><strong>Kladný výsledek</strong> <code>V · n &gt; 0</code> → plocha je <strong>přivrácená</strong> (viditelná z daného směru).</li>
+<li><strong>Záporný</strong> → odvrácená (zadní strana), lze vynechat (back-face culling).</li>
+</ul>
+<ul>
+<li>Hrana mezi dvěma viditelnými plochami je potenciálně viditelná.</li>
+<li>Hrana mezi neviditelnými plochami je neviditelná.</li>
+<li>Hrana mezi viditelnou a neviditelnou plochou je obrysová.</li>
+</ul>
+    </section>
+
+  </article>
+  <article class="topic tier-medium" id="q07-z-buffer">
+    <header class="topic-header">
+      <span class="topic-num" aria-hidden="true">7</span>
+      <h2>z-buffer</h2>
+      <span class="freq" title="Výskyt na zkouškách">6×</span>
+    </header>
+
+    <section class="answer" aria-label="Odpověď">
+<p><strong>Z-buffer</strong> — 2D pole (stejná velikost jako color buffer / framebuffer), ukládá hloubku <code>z</code> nejbližšího fragmentu, typicky float. Počítá se v GPU.</p>
+<ol>
+<li>O jakou datovou strukturu se jedná? → <strong>2D pole</strong></li>
+<li>Jakou má velikost? → <strong>jako framebuffer</strong> (rozlišení obrazu)</li>
+<li>Jaké hodnoty obsahuje? → <strong>Z souřadnice</strong> (hloubka) nejbližších bodů ploch</li>
+<li>Kde se používá? → <strong>GPU</strong>, rasterizace</li>
+<li>Pro jaké objekty je vhodný? → <strong>netransparentní polygony</strong> (trojúhelníky)</li>
+<li>Řeší problém <strong>viditelnosti</strong> — který pixel se vykreslí, když se plochy překrývají</li>
+</ol>
+    </section>
+
+  </article>
+  <article class="topic tier-medium" id="q08-dkov-vyplnov-n">
+    <header class="topic-header">
+      <span class="topic-num" aria-hidden="true">8</span>
+      <h2>řádkové vyplnování</h2>
+      <span class="freq" title="Výskyt na zkouškách">6×</span>
+    </header>
+
+    <section class="answer" aria-label="Odpověď">
+<p><strong>Řádkové vyplňování</strong> (scan-line fill) — 4 kroky:</p>
+<ol>
+<li>Pro každý řádek oblasti vytvořit seznam souřadnic <code>x</code> průsečíků s hranami (vodorovné hrany vynechat).</li>
+<li>Seřadit seznam podle <code>x</code>.</li>
+<li>Vykreslit vodorovné úseky mezi lichým a sudým průsečníkem (1–2, 3–4, …).</li>
+<li>Je-li počet průsečníků lichý, v lokálním extrému vykreslit úsek obou hran.</li>
+</ol>
+<p>Varianty: šrafování (přeskakování řádků), gradient (inkrement parametru po řádcích), inverzní řádkové vyplňování.</p>
+    </section>
+    <section class="figures" aria-label="Obrázky">
+      <div>
+      <figure>
+        <img src="images/pdf/page04-img01.png" alt="Řádkové vyplňování — průsečíky se scanline" loading="lazy" />
+        <figcaption>Řádkové vyplňování — průsečíky se scanline</figcaption>
+      </figure>
+      </div>
+    </section>
+  </article>
+  <article class="topic tier-medium" id="q09-textury-u-3d-model">
+    <header class="topic-header">
+      <span class="topic-num" aria-hidden="true">9</span>
+      <h2>textury u 3D modelů</h2>
+      <span class="freq" title="Výskyt na zkouškách">6×</span>
+    </header>
+
+    <section class="answer" aria-label="Odpověď">
+<p><strong>Textura</strong> — popis detailu povrchu nezávislý na geometrii, vzorek = texel.</p>
+<p><strong>Typy:</strong></p>
+<ul>
+<li><strong>Datové</strong> — uložené v paměti, rychlé, náchylné k aliasu.</li>
+<li><strong>Procedurální</strong> — dynamické, parametrické, méně aliasu, pomalejší.</li>
+</ul>
+<p><strong>Informace na textuře:</strong> barva, průhlednost, optické vlastnosti, normála (bump), geometrie (displacement), zrcadlení okolí, osvětlení.</p>
+<p><strong>Mapování na 3D:</strong> inverzní analytické funkce (koule, válec), premietání z obalového tělesa, 3D textury (scale), UV mapování (rozvinutí „kůže“).</p>
+<p><strong>Mapování povrchu:</strong></p>
+<ul>
+<li><strong>Bump mapping</strong> — optická změna normály</li>
+<li><strong>Displacement mapping</strong> — skutečná změna geometrie</li>
+<li><strong>Environment mapping</strong> — odraz okolí</li>
+<li><strong>Light mapping</strong> — předpočítané světlo</li>
+</ul>
+    </section>
+
+  </article>
+  <article class="topic tier-medium" id="q10-pined-v-algoritmus">
+    <header class="topic-header">
+      <span class="topic-num" aria-hidden="true">10</span>
+      <h2>pinedův algoritmus</h2>
+      <span class="freq" title="Výskyt na zkouškách">5×</span>
+    </header>
+
+    <section class="answer" aria-label="Odpověď">
+<p><strong>Pinedův algoritmus</strong> — vyplňování konvexní oblasti (nejčastěji trojúhelník).</p>
+<ul>
+<li>Oblast = seznam hran dělících rovinu na poloroviny.</li>
+<li>Bod je uvnitř, leží-li na kladné straně <strong>všech</strong> polorovin (hranová funkce ≥ 0).</li>
+<li><strong>Hranová funkce (edge function)</strong> <code>E<sub>i</sub></code> — vektorový součin směrového vektoru hrany a vektoru z počátku hrany do bodu <code>P</code>.</li>
+<li>Je-li <code>E<sub>i</sub>(P) ≥ 0</code>, bod je uvnitř nebo na hranici.</li>
+<li>Lze optimalizovat inkrementálně po řádcích/sloupcích bez přepočtu pro každý pixel.</li>
+</ul>
+    </section>
+    <section class="figures" aria-label="Obrázky">
+      <div class="figure-grid">
+      <figure>
+        <img src="images/pineda-algoritmus.png" alt="Pinedův algoritmus — hranové funkce E₁, E₂, E₃, pixel uvnitř jen když jsou všechny kladné" loading="lazy" />
+        <figcaption>Pinedův algoritmus — hranové funkce E₁, E₂, E₃, pixel uvnitř jen když jsou všechny kladné</figcaption>
+      </figure>
+      <figure>
+        <img src="images/pdf/page04-img03.png" alt="Průnik polorovin (edge funkce)" loading="lazy" />
+        <figcaption>Průnik polorovin (edge funkce)</figcaption>
+      </figure>
+      </div>
+    </section>
+  </article>
+  <article class="topic tier-medium" id="q11-vertex-fragment-shader">
+    <header class="topic-header">
+      <span class="topic-num" aria-hidden="true">11</span>
+      <h2>vertex/fragment shader</h2>
+      <span class="freq" title="Výskyt na zkouškách">5×</span>
+    </header>
+
+    <section class="answer" aria-label="Odpověď">
+<p><strong>Vertex shader</strong></p>
+<ul>
+<li>Běží na vertex procesoru, transformuje vrcholy primitiv (model, view, projekce).</li>
+<li>Vstupy: built-in a user attribute/uniform proměnné.</li>
+<li>Výstupy: varying proměnné pro rasterizátor (pozice, normály, UV, …).</li>
+</ul>
+<p><strong>Fragment shader</strong></p>
+<ul>
+<li>Operace nad fragmenty (kandidátní pixely), barva, textury, osvětlení ve výsledném renderu.</li>
+</ul>
+<p><strong>Rozdíl:</strong></p>
+<ul>
+<li><strong>Vertex shader</strong> — geometrická transformace do pipeline</li>
+<li><strong>Fragment shader</strong> — finální vzhled každého pixelu</li>
+</ul>
+    </section>
+
+  </article>
+  <article class="topic tier-medium" id="q12-radiozita-vs-raytracing">
+    <header class="topic-header">
+      <span class="topic-num" aria-hidden="true">12</span>
+      <h2>radiozita vs raytracing</h2>
+      <span class="freq" title="Výskyt na zkouškách">5×</span>
+    </header>
+
+    <section class="answer" aria-label="Odpověď">
+<table>
+<thead><tr><th></th><th>Ray-tracing</th><th>Radiozita</th></tr></thead>
+<tbody>
+<tr><td>Stíny</td><td>ostré</td><td>měkké</td></tr>
+<tr><td>Odrazy okolí na povrchu</td><td>ano</td><td>ne</td></tr>
+<tr><td>Sekundární osvětlení</td><td>ne</td><td>ano</td></tr>
+<tr><td>Zdroje světla</td><td>bodové</td><td>plošné</td></tr>
+<tr><td>Vhodná reprezentace</td><td>CSG</td><td>polygonální</td></tr>
+<tr><td>Řeší viditelnost a zobrazení</td><td>ano</td><td>ne</td></tr>
+</tbody>
+</table>
+<p>Ray-tracing je obrazová metoda. Radiozita je komplexní fyzikální metoda globálního osvětlení (měkké stíny, sekundární světlo) a neřeší přímo zobrazení.</p>
+    </section>
+
+  </article>
+  <article class="topic tier-medium" id="q13-aplikace-vytvo-en-operace-v-p-edchoz-m-b">
+    <header class="topic-header">
+      <span class="topic-num" aria-hidden="true">13</span>
+      <h2>aplikace vytvořené operace v předchozím bodě</h2>
+      <span class="freq" title="Výskyt na zkouškách">4×</span>
+    </header>
+
+    <section class="answer" aria-label="Odpověď">
+<p>Aplikace matic z předchozího tématu na body:</p>
+<ol>
+<li>Bod v homogenních souřadnicích <code>[x, y, w]</code> nebo <code>[x, y, z, 1]</code>.</li>
+<li>Násobení maticí transformace (posun, rotace, měřítko, složená matice).</li>
+<li>Po perspektivní projekci: <strong>perspektivní dělení</strong> <code>x' = X/w</code>, <code>y' = Y/w</code> (příp. <code>z'</code>).</li>
+</ol>
+<p>Afinní transformace zachovává rovnoběžnost přímek, lineární část + translace. Složením matic lze řetězit operace v jednom kroku.</p>
+    </section>
+    <section class="figures" aria-label="Obrázky">
+      <div class="figure-grid">
+      <figure>
+        <img src="images/pdf/page05-img02.png" alt="Matice posunu a měřítka ve 3D" loading="lazy" />
+        <figcaption>Matice posunu a měřítka ve 3D</figcaption>
+      </figure>
+      <figure>
+        <img src="images/pdf/page05-img03.png" alt="Rotace, zkosení a viewport transformace" loading="lazy" />
+        <figcaption>Rotace, zkosení a viewport transformace</figcaption>
+      </figure>
+      </div>
+    </section>
+  </article>
+  <article class="topic tier-medium" id="q14-rgb-cmyk">
+    <header class="topic-header">
+      <span class="topic-num" aria-hidden="true">14</span>
+      <h2>RGB/CMYK</h2>
+      <span class="freq" title="Výskyt na zkouškách">4×</span>
+    </header>
+
+    <section class="answer" aria-label="Odpověď">
+<p><strong>RGB</strong> — aditivní míchání (světlo), základ Red, Green, Blue, max. intenzity = bílá. Monitory, projektory, kamery.</p>
+<p><strong>CMYK</strong> — subtraktivní míchání (pigment), Cyan, Magenta, Yellow, Black (Key), max. = černá. Tisk.</p>
+<p><strong>HSV</strong> — <strong>H</strong> odstín, <strong>S</strong> sytost, <strong>V</strong> světlost. Uživatelsky orientovaný model (barevná kolečka v editorech). Při úbytku <strong>V</strong> klesá i sytost, barva tmavne k černé.</p>
+<figure>
+<img src="images/hsv-model.png" alt="HSV model — H po obvodu kruhu, S a V v trojúhelníku" loading="lazy" />
+<figcaption>HSV: H po obvodu, S od bílé ke syté barvě, V od černé ke světlé</figcaption>
+</figure>
+<p><strong>HSL</strong> — stejné <strong>H</strong> a <strong>S</strong>, místo světlosti <strong>L</strong> jas (lightness). CSS, návrhové nástroje. Při <strong>L</strong> 0 % nebo 100 % klesá sytost na nulu (černá / bílá).</p>
+<figure>
+<img src="images/hsl-model.png" alt="HSL — odstín, sytost a jas jako tři nezávislé osy" loading="lazy" />
+<figcaption>HSL: H (0°–360°), S (0–100 %), L jas / světlost (0–100 %)</figcaption>
+</figure>
+<p>Převod do šedotónu: vážený průměr kanálů, prakticky 256 úrovní.</p>
+    </section>
+    <section class="figures" aria-label="Obrázky">
+      <div>
+      <figure>
+        <img src="images/pdf/page01-img01.png" alt="RGB a CMY — aditivní vs. subtraktivní model (krychle barev)" loading="lazy" />
+        <figcaption>RGB a CMY — aditivní vs. subtraktivní model (krychle barev)</figcaption>
+      </figure>
+      </div>
+    </section>
+  </article>
+  <article class="topic tier-medium" id="q15-dda-s-fixed-point-aritmetikou">
+    <header class="topic-header">
+      <span class="topic-num" aria-hidden="true">15</span>
+      <h2>DDA s fixed point aritmetikou</h2>
+      <span class="freq" title="Výskyt na zkouškách">3×</span>
+    </header>
+
+    <section class="answer" aria-label="Odpověď">
+<p><strong>DDA s fixed-point aritmetikou</strong> — rasterizace úsečky bez floatů, přírůstek <code>k</code> ve fixed-point reprezentaci.</p>
+<pre><code>#define FRAC_BITS 8
+
+LineDDAFixed(int x1, int y1, int x2, int y2) {
+   int k = (y2 - y1) &lt;&lt; FRAC_BITS / (x2 - x1);
+   int y = y1 &lt;&lt; FRAC_BITS;
+
+   for (int x = x1; x &lt;= x2; x++) {
+       draw_pixel(x, y &gt;&gt; FRAC_BITS);
+       y += k;
+   }
+}</code></pre>
+<p>Oproti float DDA: rychlejší na HW bez FPU, stejný princip — po <code>x</code> inkrementovat <code>y</code> o směrnici.</p>
+    </section>
+
+  </article>
+  <article class="topic tier-medium" id="q16-aditivni-substraktivni-model">
+    <header class="topic-header">
+      <span class="topic-num" aria-hidden="true">16</span>
+      <h2>aditivni / substraktivni model</h2>
+      <span class="freq" title="Výskyt na zkouškách">3×</span>
+    </header>
+
+    <section class="answer" aria-label="Odpověď">
+<p><strong>Aditivní model (RGB)</strong> — sčítání světelných složek, více světla = světlejší, bílá = složení max. R+G+B.</p>
+<p><strong>Subtraktivní model (CMYK)</strong> — odčítání od bílého papíru pigmenty, více pigmentu = tmavší, černá = plné CMY + K.</p>
+<p>RGB pro emisivní zařízení, CMYK pro tisk — fyzikálně odpovídají složení vs. filtrace světla.</p>
+    </section>
+
+  </article>
+  <article class="topic tier-medium" id="q17-pseudokod-vykresleni-krivky">
+    <header class="topic-header">
+      <span class="topic-num" aria-hidden="true">17</span>
+      <h2>pseudokod vykresleni krivky</h2>
+      <span class="freq" title="Výskyt na zkouškách">3×</span>
+    </header>
+
+    <section class="answer" aria-label="Odpověď">
+<p>Pseudokód rasterizace úsečky (DDA) — první kvadrant, rostoucí úsečka:</p>
+<pre><code>LineDDA(int x1, int y1, int x2, int y2) {
+   double k = (y2 - y1) / (x2 - x1);
+   double y = y1;
+
+   for (int x = x1; x &lt;= x2; x++) {
+       draw_pixel(x, round(y));
+       y += k;
+   }
+}</code></pre>
+<p>Pro křivky (De Casteljau): opakovaně dělit řídicí polygon v poměru <code>t</code> a <code>1−t</code>, spojovat body úsečkami pro různá <code>t</code>.</p>
+    </section>
+
+  </article>
+  <article class="topic tier-medium" id="q18-alias">
+    <header class="topic-header">
+      <span class="topic-num" aria-hidden="true">18</span>
+      <h2>alias</h2>
+      <span class="freq" title="Výskyt na zkouškách">3×</span>
+    </header>
+
+    <section class="answer" aria-label="Odpověď">
+<p><strong>Aliasing</strong> — nežádoucí jev při nízkofrekvenčním vzorkování vysokofrekvenčního signálu (zubaté hrany, poruchy textur).</p>
+<p><strong>Příčiny:</strong> příliš malá vzorkovací frekvence, příliš pravidelné nebo přesné vzorkování.</p>
+<p><strong>Shannonův vzorkovací teorém:</strong> přesná rekonstrukce je možná, pokud je vzorkovací frekvence ≥ 2× maximální frekvence signálu.</p>
+<p><strong>Řešení:</strong></p>
+<ul>
+<li>Zvýšení rozlišení (náročné).</li>
+<li>Předfiltrování vstupu / supersampling (více vzorků na pixel, konvoluce).</li>
+<li>Přefiltrování výstupu (postprocess, ztráta detailů).</li>
+<li><strong>Multisampling</strong> — adaptivní supersampling hlavně u hran.</li>
+</ul>
+    </section>
+
+  </article>
+  <article class="topic tier-medium" id="q19-b-rep">
+    <header class="topic-header">
+      <span class="topic-num" aria-hidden="true">19</span>
+      <h2>B-rep</h2>
+      <span class="freq" title="Výskyt na zkouškách">3×</span>
+    </header>
+
+    <section class="answer" aria-label="Odpověď">
+<p><strong>B-rep (Boundary representation)</strong> — objekt popsaný povrchem (hranice), bez uložené vnitřní struktury.</p>
+<ul>
+<li>Skládá se z <strong>vrcholů</strong>, <strong>hran</strong> (úsečky, křivky) a <strong>stěn</strong> (polygony).</li>
+<li><strong>Drátový model</strong> — málo informací, rychlý náhled.</li>
+<li><strong>Polygonální model</strong> — jednoznačný, méně přesný, HW podpora.</li>
+<li>Požadavky na model: obecnost, úplnost, jednoznačnost, přesnost, regulérnost, konzistence operací, kompaktnost.</li>
+<li><strong>Manifold</strong> — každá hrana sdílena max. dvěma stěnami (vyrobitelný objekt).</li>
+</ul>
+    </section>
+
+  </article>
+  <article class="topic tier-medium" id="q20-mip-mapping">
+    <header class="topic-header">
+      <span class="topic-num" aria-hidden="true">20</span>
+      <h2>MIP mapping</h2>
+      <span class="freq" title="Výskyt na zkouškách">3×</span>
+    </header>
+
+    <section class="answer" aria-label="Odpověď">
+<p><strong>MIP mapping</strong> — řešení aliasu textur při zmenšení podle vzdálenosti od kamery.</p>
+<ul>
+<li>Více úrovní (mipmap) stejné textury: každá další má poloviční rozměr (32→16→8→…→1).</li>
+<li>Uloženo v jedné větší 2D struktuře (např. 2× rozlišení původní textury).</li>
+<li>Mohou být předgenerované na disku, při zmenšení vyhlazovací filtr.</li>
+<li>Zrychlení texturování malých objektů, lepší vizuální kvalita.</li>
+</ul>
+<p>Perspektivní zkreslení UV: řešení dělením polygonů na menší části.</p>
+    </section>
+
+  </article>
+  <article class="topic tier-medium" id="q21-brassenham-v-algoritmus">
+    <header class="topic-header">
+      <span class="topic-num" aria-hidden="true">21</span>
+      <h2>Brassenhamův algoritmus</h2>
+      <span class="freq" title="Výskyt na zkouškách">3×</span>
+    </header>
+
+    <section class="answer" aria-label="Odpověď">
+<p><strong>Bresenhamův (midpoint) algoritmus</strong> — celočíselná rasterizace úsečky.</p>
+<pre><code>LineBres(int x1, int y1, int x2, int y2) {
+   int dx = x2 - x1, dy = y2 - y1;
+   int P = 2*dy - dx;
+   int P1 = 2*dy, P2 = P1 - 2*dx;
+   int y = y1;
+
+   for (int x = x1; x &lt;= x2; x++) {
+       draw_pixel(x, y);
+       if (P &gt;= 0) { P += P2; y++; }
+       else          P += P1;
+   }
+}</code></pre>
+<p>Rozhodování o kroku v <code>y</code> pomocí prediktoru <code>P</code>, jen sčítání a porovnání — efektivnější než DDA s float.</p>
+    </section>
+
+  </article>
+  <article class="topic tier-medium" id="q22-parametrick-sm-rnicov-tvar-p-mky">
+    <header class="topic-header">
+      <span class="topic-num" aria-hidden="true">22</span>
+      <h2>parametrický/směrnicový tvar přímky</h2>
+      <span class="freq" title="Výskyt na zkouškách">3×</span>
+    </header>
+
+    <section class="answer" aria-label="Odpověď">
+<p><strong>Parametrický tvar přímky</strong> (s parametrem <code>t</code>):</p>
+<p><code>P(t) = P<sub>1</sub> + t · (P<sub>2</sub> − P<sub>1</sub>)</code>, <code>t ∈ [0, 1]</code></p>
+<p>Směrový vektor <code>u = (x<sub>2</sub>−x<sub>1</sub>, y<sub>2</sub>−y<sub>1</sub>)</code>.</p>
+<p><strong>Směrnicový tvar</strong> (funkce <code>y = f(x)</code>):</p>
+<p><code>y = q + k·x</code>, kde <code>k = dy/dx</code> je směrnice, <code>q</code> offset na ose Y.</p>
+<p>Směrnicový tvar nejde pro svislé přímky, parametrický je obecnější.</p>
+    </section>
+
+  </article>
+  <article class="topic tier-low" id="q23-algoritmus-de-casteljau">
+    <header class="topic-header">
+      <span class="topic-num" aria-hidden="true">23</span>
+      <h2>algoritmus De Casteljau</h2>
+      <span class="freq" title="Výskyt na zkouškách">2×</span>
+    </header>
+
+    <section class="answer" aria-label="Odpověď">
+<p><strong>Algoritmus de Casteljau</strong> — rekurentní vykreslení Bézierových křivek.</p>
+<ol>
+<li>Řídicí body polygonu, pro dané <code>t</code> dělit každou úsečku v poměru <code>t : (1−t)</code>.</li>
+<li>Opakovat na novém polygonu, dokud nezůstane jeden bod — bod na křivce.</li>
+<li>Pro různá <code>t</code> s krokem spojovat body úsečkami.</li>
+</ol>
+<p>U kubik: „divide and conquer“ — rekurzivní dělení na dvě podkřivky (<code>t = 0.5</code>), ukončit, když je křivka dostatečně rovná (vzdálenost &lt; úhlopříčka pixelu).</p>
+    </section>
+
+  </article>
+  <article class="topic tier-low" id="q24-o-ez-weiler-artheton">
+    <header class="topic-header">
+      <span class="topic-num" aria-hidden="true">24</span>
+      <h2>ořez Weiler-Artheton</h2>
+      <span class="freq" title="Výskyt na zkouškách">2×</span>
+    </header>
+
+    <section class="answer" aria-label="Odpověď">
+<p><strong>Weiler–Atherton</strong> — ořez polygonu oknem (obecné polygony, i s otvory).</p>
+<p>Seznamy:</p>
+<ul>
+<li><code>P</code> — vrcholy a průsečíky na polygonu</li>
+<li><code>W</code> — na okně</li>
+<li><code>I</code> — vstupní průsečíky</li>
+<li><code>O</code> — výstupní průsečíky</li>
+<li><code>C</code> — ořez uvnitř okna</li>
+<li><code>R</code> — odřezky venku</li>
+</ul>
+<ol>
+<li>Průsečíky (např. Liang–Barsky).</li>
+<li>Polygon celý uvnitř → do <code>C</code>.</li>
+<li>Start v <code>P</code> na prvním vrcholu z <code>I</code>, střídat pohyb po <code>P</code> / <code>W</code> podle typu průsečíku.</li>
+<li>Odřezky mimo okno → <code>R</code>, analogicky od prvního <code>O</code>.</li>
+</ol>
+    </section>
+
+  </article>
+  <article class="topic tier-low" id="q25-textury-u-trojuhelniku">
+    <header class="topic-header">
+      <span class="topic-num" aria-hidden="true">25</span>
+      <h2>textury u trojuhelniku</h2>
+      <span class="freq" title="Výskyt na zkouškách">2×</span>
+    </header>
+
+    <section class="answer" aria-label="Odpověď">
+<p><strong>Texturování trojúhelníku</strong> — souřadnice textury v jednotlivých vrcholech, interpolace po ploše.</p>
+<p>Příklad z guide (barva / textura v těžišti a na hranách):</p>
+<ul>
+<li><code>T(r,g,b) = ⅓(P<sub>1</sub>+P<sub>2</sub>+P<sub>3</sub>)</code> v těžišti.</li>
+<li><code>C<sub>13</sub>(r,g,b) = ½(P<sub>1</sub>+P<sub>3</sub>)</code> na hraně.</li>
+</ul>
+<p>Obecně: <code>(u,v)</code> ve vrcholech → lineární interpolace <code>u,v</code> (a případně hloubka <code>z</code>) uvnitř polygonu, vzorkování texelu. U perspektivy je vhodné korektní perspektivní interpolace nebo dělení na menší trojúhelníky.</p>
+    </section>
+    <section class="figures" aria-label="Obrázky">
+      <div>
+      <figure>
+        <img src="images/image29.png" alt="Mapování textury na trojúhelník (UV souřadnice)" loading="lazy" />
+        <figcaption>Mapování textury na trojúhelník (UV souřadnice)</figcaption>
+      </figure>
+      </div>
+    </section>
+  </article>
+  <article class="topic tier-low" id="q26-texturovac-sou-adnice">
+    <header class="topic-header">
+      <span class="topic-num" aria-hidden="true">26</span>
+      <h2>texturovací souřadnice</h2>
+      <span class="freq" title="Výskyt na zkouškách">2×</span>
+    </header>
+
+    <section class="answer" aria-label="Odpověď">
+<p><strong>Texturovací souřadnice (u, v)</strong></p>
+<ul>
+<li>Zadávají se <strong>ručně nebo automaticky</strong> u vrcholů sítě — dva floaty <code>u, v</code>.</li>
+<li>Typicky <strong>0–1</strong> (normalizované) — pozice na 2D textuře.</li>
+<li>Mezi vrcholy se <strong>lineárně interpolují</strong> po polygonech.</li>
+<li>Definiční obor textury může být i <strong>3D prostorová textura</strong> <code>[x,y,z]</code>, normála, vektor odrazu (environment mapping), předpočítaná light mapa.</li>
+</ul>
+    </section>
+
+  </article>
+  <article class="topic tier-low" id="q27-shannon-v-vzorkovac-teor-m">
+    <header class="topic-header">
+      <span class="topic-num" aria-hidden="true">27</span>
+      <h2>Shannonův vzorkovací teorém</h2>
+      <span class="freq" title="Výskyt na zkouškách">2×</span>
+    </header>
+
+    <section class="answer" aria-label="Odpověď">
+<p><strong>Shannonův vzorkovací teorém:</strong> přesná rekonstrukce spojitého, frekvenčně omezeného signálu z diskrétního vzorku je možná tehdy, pokud byla vzorkovací frekvence <strong>alespoň dvojnásobkem</strong> maximální frekvence signálu (Nyquist: <code>f<sub>s</sub> ≥ 2·f<sub>max</sub></code>).</p>
+<p>Porušení → aliasing. Řešení: vyšší vzorkování, předfiltrování (supersampling), vyhlazení výstupu.</p>
+    </section>
+
+  </article>
+  <article class="topic tier-low" id="q28-multisampling-supersapling">
+    <header class="topic-header">
+      <span class="topic-num" aria-hidden="true">28</span>
+      <h2>multisampling/supersapling</h2>
+      <span class="freq" title="Výskyt na zkouškách">2×</span>
+    </header>
+
+    <section class="answer" aria-label="Odpověď">
+<p><strong>Supersampling</strong> — předfiltrování, pixel rozdělen na více vzorků, výsledná barva = složení (konvoluční filtr), vyhlazí hrany i textury, vysoká cena.</p>
+<p><strong>Multisampling</strong> — adaptivní supersampling, hustší vzorkování u hran a gradientů, méně u ploch, výrazné vyhlazení hran, menší pokles výkonu než plný supersampling.</p>
+    </section>
+    <section class="figures" aria-label="Obrázky">
+      <div>
+      <figure>
+        <img src="images/ssaa-msaa.png" alt="SSAA — vzorky ve všech pixelech, MSAA — více vzorků hlavně u hran trojúhelníku" loading="lazy" />
+        <figcaption>SSAA — vzorky ve všech pixelech, MSAA — více vzorků hlavně u hran trojúhelníku</figcaption>
+      </figure>
+      </div>
+    </section>
+  </article>
+  <article class="topic tier-low" id="q29-grafick-kontext">
+    <header class="topic-header">
+      <span class="topic-num" aria-hidden="true">29</span>
+      <h2>grafický kontext</h2>
+      <span class="freq" title="Výskyt na zkouškách">2×</span>
+    </header>
+
+    <section class="answer" aria-label="Odpověď">
+<p><strong>Grafický kontext</strong> — datová struktura pro kreslení na různá výstupní zařízení (display, bitmapa, PDF, soubor).</p>
+<p><strong>Skládá se z:</strong></p>
+<ul>
+<li>Parametrů výstupního zařízení (formát obrazu).</li>
+<li>Šířky a výšky kreslící plochy (včetně ořezu).</li>
+<li>Transformace výstupu (device-independent kreslení).</li>
+</ul>
+<p>Cíl: jednotné API pro Window, Printer, Drawing, PDF atd.</p>
+    </section>
+
+  </article>
+  <article class="topic tier-low" id="q30-halftoning-dithering">
+    <header class="topic-header">
+      <span class="topic-num" aria-hidden="true">30</span>
+      <h2>halftoning/dithering</h2>
+      <span class="freq" title="Výskyt na zkouškách">2×</span>
+    </header>
+
+    <section class="answer" aria-label="Odpověď">
+<p><strong>Dithering</strong> — nahrazení stupňů šedi černobílými tečkami, zachová rozměr, výstup na obrazovku.</p>
+<ul>
+<li><strong>Prahování</strong> — podle prahu <code>T</code>, jednoduché, špatné u jemných přechodů.</li>
+<li><strong>Náhodné rozptýlení</strong> — rychlé, zachová jasové poměry.</li>
+<li><strong>Distribuce chyby</strong> (Floyd–Steinberg, Bayer, …) — chyba k sousedům.</li>
+<li><strong>Maticové rozptýlení</strong> — porovnání s rozptylovací maticí.</li>
+</ul>
+<p><strong>Halftoning</strong> — každý pixel nahrazen vzorem černobílých bodů dané hodnoty, <strong>zvětšuje</strong> rozměr obrazu, výstup do tiskárny.</p>
+    </section>
+    <section class="figures" aria-label="Obrázky">
+      <div class="figure-grid">
+      <figure>
+        <img src="images/pdf/page02-img04.png" alt="Dithering — rozptyl chyby" loading="lazy" />
+        <figcaption>Dithering — rozptyl chyby</figcaption>
+      </figure>
+      <figure>
+        <img src="images/halftoning-matice.png" alt="Halftoning — pixel obrázku porovnaný s maticí prahů, výstup 0 nebo 255, rozměr se zvětší" loading="lazy" />
+        <figcaption>Halftoning — pixel obrázku porovnaný s maticí prahů, výstup 0 nebo 255, rozměr se zvětší</figcaption>
+      </figure>
+      </div>
+    </section>
+  </article>
+  <article class="topic tier-low" id="q31-perspektivni-vs-paralelni-projekce">
+    <header class="topic-header">
+      <span class="topic-num" aria-hidden="true">31</span>
+      <h2>perspektivni vs paralelni projekce</h2>
+      <span class="freq" title="Výskyt na zkouškách">2×</span>
+    </header>
+
+    <section class="answer" aria-label="Odpověď">
+<p><strong>Perspektivní projekce</strong></p>
+<ul>
+<li>Středová — paprsky se sbíhají v jednom bodě (kamera).</li>
+<li>Nezachovává rovnoběžnost hran.</li>
+<li>Vzdálenost od středu ovlivňuje velikost průmětu.</li>
+</ul>
+<p><strong>Paralelní (ortogonální) projekce</strong></p>
+<ul>
+<li>Rovnoběžné paprsky (často kolmé).</li>
+<li>Zachovává rovnoběžnost.</li>
+<li>Vzdálenost obvykle neovlivňuje velikost průmětu.</li>
+</ul>
+<p>Ortogonální: kvádr, perspektivní: jehlan.</p>
+    </section>
+    <section class="figures" aria-label="Obrázky">
+      <div>
+      <figure>
+        <img src="images/pdf/page07-img05.png" alt="Perspektivní projekční matice" loading="lazy" />
+        <figcaption>Perspektivní projekční matice</figcaption>
+      </figure>
+      </div>
+    </section>
+  </article>
+  <article class="topic tier-low" id="q32-barycentricke-souradnice">
+    <header class="topic-header">
+      <span class="topic-num" aria-hidden="true">32</span>
+      <h2>barycentricke souradnice</h2>
+      <span class="freq" title="Výskyt na zkouškách">2×</span>
+    </header>
+
+    <section class="answer" aria-label="Odpověď">
+<p><strong>Barycentrické souřadnice</strong> — váhy <code>λ<sub>1</sub>, λ<sub>2</sub>, λ<sub>3</sub></code> vůči vrcholům trojúhelníku:</p>
+<p><code>P = λ<sub>1</sub>P<sub>1</sub> + λ<sub>2</sub>P<sub>2</sub> + λ<sub>3</sub>P<sub>3</sub></code>, kde <code>λ<sub>1</sub>+λ<sub>2</sub>+λ<sub>3</sub> = 1</code>.</p>
+<p>Bod je uvnitř, jsou-li všechny <code>λ<sub>i</sub> ≥ 0</code>. Výpočet z plošných nebo vektorových veličin (např. plochy dílčích trojúhelníků). Použití: interpolace barev, textur, normál uvnitř trojúhelníku.</p>
+    </section>
+
+  </article>
+  <article class="topic tier-low" id="q33-lambertuv-osvetlovaci-model">
+    <header class="topic-header">
+      <span class="topic-num" aria-hidden="true">33</span>
+      <h2>lambertuv osvetlovaci model</h2>
+      <span class="freq" title="Výskyt na zkouškách">1×</span>
+    </header>
+
+    <section class="answer" aria-label="Odpověď">
+<p><strong>Lambertův (difúzní) osvětlovací model</strong> — intenzita odraženého světla úměrná <code>cos θ</code>, kde <code>θ</code> je úhel mezi směrem světla <code>L</code> a normálou <code>n</code> (často <code>I ∝ max(0, L·n)</code>).</p>
+<p>Na diagramu označte: zdroj světla, bod na povrchu, normálu <code>n</code>, směr k pozorovateli <code>V</code>, úhel <code>θ</code>. Difúzní odraz jde do všech směrů — pozorovatel vidí stejně (matný povrch).</p>
+    </section>
+    <section class="figures" aria-label="Obrázky">
+      <div class="figure-grid">
+      <figure>
+        <img src="images/lambert-model.png" alt="Lambertův model — N, L, Dₛ = N·L·Bₛ·Bₘ, Aₛ = Bₘ·Bₐₛ" loading="lazy" />
+        <figcaption>Lambertův model — N, L, Dₛ = N·L·Bₛ·Bₘ, Aₛ = Bₘ·Bₐₛ</figcaption>
+      </figure>
+      <figure>
+        <img src="images/pdf/page10-img01.png" alt="Difúzní odraz na kouli" loading="lazy" />
+        <figcaption>Difúzní odraz na kouli</figcaption>
+      </figure>
+      </div>
+    </section>
+  </article>
+  <article class="topic tier-low" id="q34-rovnice-k-ivky">
+    <header class="topic-header">
+      <span class="topic-num" aria-hidden="true">34</span>
+      <h2>rovnice křivky</h2>
+      <span class="freq" title="Výskyt na zkouškách">1×</span>
+    </header>
+
+    <section class="answer" aria-label="Odpověď">
+<p><strong>Rovnice křivky</strong> — polynomiální tvar, např. spline segmenty:</p>
+<p><code>Q(t) = a t³ + b t² + c t + d</code> (kubika), koeficienty z okrajových podmínek (body, tečny).</p>
+<p><strong>Typy:</strong> interpolační (prochází body), aproximační (řídicí body), racionální (váhy — invariantní k perspektivě), neracionální.</p>
+<p><strong>Fergusonova kubika:</strong> 2 koncové body + 2 tečny, spojení C⁰/C¹. <strong>Bézier:</strong> Bernsteinovy polynomy, konvexní obal řídicích bodů.</p>
+    </section>
+
+  </article>
+  <article class="topic tier-low" id="q35-paramertick-tvar-k-ivky">
+    <header class="topic-header">
+      <span class="topic-num" aria-hidden="true">35</span>
+      <h2>paramertický tvar křivky</h2>
+      <span class="freq" title="Výskyt na zkouškách">1×</span>
+    </header>
+
+    <section class="answer" aria-label="Odpověď">
+<p><strong>Parametrický tvar křivky</strong> <code>Q(t)</code>:</p>
+<p><code>Q(t) = (x(t), y(t))</code> nebo <code>Q(t) = P<sub>1</sub> + t(P<sub>2</sub> − P<sub>1</sub>)</code>, <code>t ∈ [0, 1]</code>.</p>
+<p>Pro úsečku: <code>x(t) = x<sub>1</sub> + t(x<sub>2</sub>−x<sub>1</sub>)</code>, <code>y(t) = y<sub>1</sub> + t(y<sub>2</sub>−y<sub>1</sub>)</code>. U Bézierovy křivky stupně <code>n</code> je <code>n+1</code> řídicích bodů, <code>t</code> parametrizuje průběh po křivce.</p>
+    </section>
+
+  </article>
+
+  <footer>
+    Zdroj četnosti: <code>otazky.txt</code> · obsah: <code>IZG Ultimate Guide.txt</code>
+  </footer>
+</body>
+</html>
