@@ -1,0 +1,5 @@
+# Jedna řádka = jedno téma ## v otazky.md (stejné pořadí)
+
+První téma 1x
+Druhé téma 1x
+Třetí téma 1x

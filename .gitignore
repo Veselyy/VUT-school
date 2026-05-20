@@ -1,0 +1,13 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Build výstupy (lze znovu vygenerovat)
+**/_build.json
+**/otazky.html
+web/
+
+# GitHub Pages kopie (make pages-sync)
+docs/

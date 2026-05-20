@@ -1,0 +1,12 @@
+# Install: pip install pre-commit && pre-commit install
+# Run manually: pre-commit run --all-files
+
+repos:
+  - repo: local
+    hooks:
+      - id: check-html-formatted
+        name: HTML must be Prettier-formatted
+        entry: python3 tools/study-guide/check_html_format.py
+        language: system
+        pass_filenames: false
+        always_run: true

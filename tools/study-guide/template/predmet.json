@@ -1,0 +1,7 @@
+{
+  "title": "{{TITLE}}",
+  "lang": "cs",
+  "github_pages": {
+    "slug": "{{SLUG}}"
+  }
+}

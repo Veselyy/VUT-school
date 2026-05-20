@@ -1,24 +1,21 @@
-# IZG – náhled na GitHubu
+# IZG — příprava na zkoušku
 
-GitHub samotný `.html` soubor **nevyrenderuje jako stránku** (ukáže jen zdroják). Proto se náhled dělá přes **GitHub Pages**.
+## Co edituješ
 
-## Jak to spustit
+| Soubor | Účel |
+|--------|------|
+| `otazky.md` | Otázky a odpovědi |
+| `vyskyty.txt` | Výskyty na zkouškách (`14x`) |
+| `podklady/` | IZG Ultimate Guide a další materiály |
+| `obrazky/` | Obrázky k odpovědím |
+| `predmet.json` | Titul a slug pro `web/izg/` |
 
-1. Vygeneruj stránku:
+## Build
 
 ```bash
-python3 IZG/build_otazky.py
+./build.sh
 ```
 
-2. Na GitHubu zapni Pages:
-- **Settings → Pages**
-- **Build and deployment → Source: Deploy from a branch**
-- **Branch: `main`**, **Folder: `/docs`**
+Vygeneruje `_build.json`, `otazky.html` a `web/izg/`.
 
-3. Otevři náhled:
-- adresa bude ve stylu `https://<user>.github.io/<repo>/izg/`
-
-Generátor vytváří:
-- `docs/izg/index.html`
-- `docs/izg/images/…`
-
+[Workflow](../tools/study-guide/README.md)

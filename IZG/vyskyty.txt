@@ -1,0 +1,35 @@
+maticové operace (vypočítání souřadnic podle matice, násobení, vytvoření matice) 14x
+raytracing 8x
+Phong 8x
+stínování 7x
+OpenGL pipeline 7x
+jak poznat přivrácenou / odvrácenou stranu objektu 6x
+z-buffer 6x
+řádkové vyplnování 6x
+textury u 3D modelů 6x
+pinedův algoritmus 5x
+vertex/fragment shader 5x
+radiozita vs raytracing 5x
+aplikace vytvořené operace v předchozím bodě 4x
+RGB/CMYK 4x
+DDA s fixed point aritmetikou 3x
+aditivni / substraktivni model 3x
+pseudokod vykresleni krivky 3x
+alias 3x
+B-rep 3x
+MIP mapping 3x
+Brassenhamův algoritmus 3x
+parametrický/směrnicový tvar přímky 3x
+algoritmus De Casteljau 2x
+ořez Weiler-Artheton 2x
+textury u trojuhelniku 2x
+texturovací souřadnice 2x
+Shannonův vzorkovací teorém 2x
+multisampling/supersapling 2x
+grafický kontext 2x
+halftoning/dithering 2x
+perspektivni vs paralelni projekce 2x
+barycentricke souradnice 2x
+lambertuv osvetlovaci model 1x
+rovnice křivky 1x
+paramertický tvar křivky 1x

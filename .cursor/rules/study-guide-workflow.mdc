@@ -1,0 +1,15 @@
+---
+description: Workflow a styl pro nové předměty (study-guide z Markdownu).
+globs: "**/predmet.json"
+alwaysApply: false
+---
+
+# Study guide — nový předmět
+
+1. **Šablona:** `python3 tools/study-guide/new_subject.py <KÓD> "<Titul>" --web`
+2. **Uživatel edituje:** `otazky.md`, `vyskyty.txt`, `podklady/`, `obrazky/`, `predmet.json`, volitelně `predmet.css`
+3. **Build generuje:** `_build.json`, `otazky.html`, `web/<slug>/`
+4. **Build:** `python3 tools/study-guide/build.py <KÓD>` — styl `tools/study-guide/theme.css` + `predmet.css`
+5. **GitHub Pages:** `make pages-sync` (zkopíruje `web/` → `docs/`)
+
+Neručně needituj `_build.json`. Četnosti měň ve `vyskyty.txt`.

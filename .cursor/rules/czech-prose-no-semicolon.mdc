@@ -1,10 +1,12 @@
 ---
 description: V českých poznámkách a studijním textu nepoužívat středník jako spojku vět.
-globs: IPP/**/*.md
+globs:
+  - "**/otazky.md"
+  - "IZG/**/*.md"
 alwaysApply: false
 ---
 
-# Český studijní text (IPP)
+# Český studijní text
 
 - Ve vysvětlujícím textu (odstavce, odrážky u otázek) **nepiš středníky** mezi souvětími — raději tečku a novou větu, nebo čárku a souvětí jednoduché.
 - Středník **ponechej** tam, kde je součástí **syntaxe kódu** v ukázkách (např. `z();` v C/Java).

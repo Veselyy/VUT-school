@@ -1,0 +1,13 @@
+---
+description: Formát souboru otazky.md u předmětů.
+globs: "**/otazky.md"
+alwaysApply: false
+---
+
+# Formát souboru otazky.md
+
+Témata pouze jako `## N. Název` (číslované). Odpovědi v odrážkách, klíčové pojmy **tučně**, kód v backticks.
+
+V českém textu nepoužívat středník mezi větami. Mermaid viz study-guide-workflow.
+
+Titul a jazyk patří do `predmet.json`, ne do YAML v Markdownu. K Markdownu nepřidávat vlastní CSS ani šablony hlaviček.
