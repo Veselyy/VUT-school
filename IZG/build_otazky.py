@@ -2,12 +2,17 @@
 """Generate otazky.html from otazky.txt and IZG Ultimate Guide content."""
 import html
 import re
+import shutil
 from pathlib import Path
 
 ROOT = Path(__file__).parent
 SRC_HTML = ROOT / "otazky.html"
 OUT = ROOT / "otazky.html"
 TOPICS_FILE = ROOT / "otazky.txt"
+REPO_ROOT = ROOT.parent
+PAGES_DIR = REPO_ROOT / "docs" / "izg"
+PAGES_INDEX = PAGES_DIR / "index.html"
+PAGES_IMAGES_DIR = PAGES_DIR / "images"
 
 # Styl textu odpovědí: uprostřed vět nepoužívat středník (;).
 # Místo něj čárka, tečka, nová věta nebo další odrážka.
@@ -172,9 +177,7 @@ TOPIC_DATA: list[tuple[str, list[tuple[str, str]]]] = [
 <li><strong>3D operace:</strong> posun, rotace, měřítko, zkosení, viewport transformace.</li>
 </ul>
 <p>Aplikace na bod: násobení souřadnic translační/rotační maticí, po transformaci vydělit homogenní souřadnicí <code>w</code> (perspektiva).</p>""",
-        [
-            (f"{P}page05-img01.png", "Matice 2D transformací (posun, rotace, měřítko, zkosení)"),
-        ],
+        [],
     ),
     (
         """<p><strong>Poznámka k názvům:</strong> <em>casting</em> <em>vyslat / vrhnout</em> paprsek z kamery (jako „cast a ray“). <em>Tracing</em> pak opravdu znamená <em>sledovat / trasovat</em> další cestu světla po odrazu nebo lomu. Oba postupy paprsky vysílají, liší se hloubkou toho, co po prvním zásahu ještě počítají.</p>
@@ -678,6 +681,16 @@ def build() -> None:
 """
     OUT.write_text(body, encoding="utf-8")
     print(f"Wrote {OUT} ({len(body.splitlines())} lines)")
+
+    # GitHub náhled přes GitHub Pages:
+    # - generujeme stránku do /docs/izg/index.html
+    # - kopírujeme IZG/images -> /docs/izg/images
+    PAGES_DIR.mkdir(parents=True, exist_ok=True)
+    PAGES_INDEX.write_text(body, encoding="utf-8")
+    shutil.rmtree(PAGES_IMAGES_DIR, ignore_errors=True)
+    shutil.copytree(ROOT / "images", PAGES_IMAGES_DIR)
+    (PAGES_DIR / ".nojekyll").write_text("", encoding="utf-8")
+    print(f"Wrote {PAGES_INDEX}")
 
 
 if __name__ == "__main__":
