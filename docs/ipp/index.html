@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="cs" xml:lang="cs">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>otazky</title>
+    <link rel="stylesheet" href="../assets/study-guide/theme.css" />
+  <script
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
+  type="text/javascript"></script>
+</head>
+<body>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li class="tier-high"><a href="#lambda-kalkul"><span class="toc-num">1.</span> Lambda kalkul <span class="toc-freq">35×</span></a></li>
+<li class="tier-high"><a href="#robinsonův-unifikační-algoritmus-a-mgu"><span class="toc-num">2.</span> Robinsonův unifikační algoritmus a MGU <span class="toc-freq">18×</span></a></li>
+<li class="tier-high"><a href="#návrhový-vzor-adaptér"><span class="toc-num">3.</span> Návrhový vzor Adaptér <span class="toc-freq">17×</span></a></li>
+<li class="tier-high"><a href="#návrhový-vzor-dekorátor"><span class="toc-num">4.</span> Návrhový vzor Dekorátor <span class="toc-freq">10×</span></a></li>
+<li class="tier-high"><a href="#návrhový-vzor-skladba"><span class="toc-num">5.</span> Návrhový vzor Skladba <span class="toc-freq">7×</span></a></li>
+<li class="tier-medium"><a href="#návrhový-vzor-pozorovatel"><span class="toc-num">6.</span> Návrhový vzor Pozorovatel <span class="toc-freq">6×</span></a></li>
+<li class="tier-high"><a href="#rozsah-platnosti-scope"><span class="toc-num">7.</span> Rozsah platnosti <span class="toc-freq">24×</span></a></li>
+<li class="tier-high"><a href="#uzavřený-podprogram"><span class="toc-num">8.</span> Uzavřený podprogram <span class="toc-freq">12×</span></a></li>
+<li class="tier-high"><a href="#způsoby-předávání-parametrů"><span class="toc-num">9.</span> Způsoby předávání parametrů <span class="toc-freq">14×</span></a></li>
+<li class="tier-high"><a href="#paměťové-uložení-v-c-2d-pole-struktur"><span class="toc-num">10.</span> Paměťové uložení v C <span class="toc-freq">12×</span></a></li>
+<li class="tier-high"><a href="#imperativní-vs.-deklarativní-paradigma"><span class="toc-num">11.</span> Imperativní vs. deklarativní paradigma <span class="toc-freq">13×</span></a></li>
+<li class="tier-high"><a href="#obsah-třídy-a-instance-v-čistém-oo-modelu"><span class="toc-num">12.</span> Obsah třídy a instance v čistém OO modelu <span class="toc-freq">15×</span></a></li>
+<li class="tier-high"><a href="#vícenásobná-dědičnost-a-diamantový-problém"><span class="toc-num">13.</span> Vícenásobná dědičnost a diamantový problém <span class="toc-freq">11×</span></a></li>
+<li class="tier-medium"><a href="#beztřídní-jazyky-a-self"><span class="toc-num">14.</span> Beztřídní jazyky a SELF <span class="toc-freq">6×</span></a></li>
+<li class="tier-high"><a href="#sémantika-a-dynamické-chyby-v-c"><span class="toc-num">15.</span> Sémantika a dynamické chyby v C <span class="toc-freq">10×</span></a></li>
+<li class="tier-high"><a href="#bitová-pole-a-assembler"><span class="toc-num">16.</span> Bitová pole a Assembler <span class="toc-freq">12×</span></a></li>
+<li class="tier-high"><a href="#perzistentní-vs.-tranzientní-objekty"><span class="toc-num">17.</span> Perzistentní vs. tranzientní objekty <span class="toc-freq">8×</span></a></li>
+<li class="tier-high"><a href="#sld-rezoluce"><span class="toc-num">18.</span> SLD rezoluce <span class="toc-freq">8×</span></a></li>
+</ul>
+</nav>
+<article class="topic tier-high" id="lambda-kalkul">
+<header class="topic-header">
+<span class="topic-num" aria-hidden="true">1</span>
+<h2>Lambda kalkul</h2>
+<span class="freq" title="Výskyt na zkouškách">35×</span>
+</header>
+<section class="answer" aria-label="Odpověď">
+<p>Tato praktická otázka se objevuje téměř v každém termínu. Cílem je
+zjednodušit výraz pomocí <span
+class="math inline">\(\beta\)</span>-redukce.</p>
+<ul>
+<li><strong>Varianta A:</strong> <span class="math inline">\((\lambda
+ab.a(\lambda a.a)b)(\lambda ab.a)\)</span>. <strong>Výsledek:</strong>
+<span class="math inline">\(\lambda ba.a\)</span>.</li>
+<li><strong>Varianta B:</strong> <span class="math inline">\((\lambda
+uw.u(\lambda uw.w)w)(\lambda w.w)\)</span>. <strong>Výsledek:</strong>
+<span class="math inline">\(\lambda ww.w\)</span>.</li>
+<li><strong>Varianta C:</strong> <span class="math inline">\((\lambda
+za.z(\lambda a.a)a)(\lambda za.z)\)</span>. <strong>Výsledek:</strong>
+<span class="math inline">\(\lambda aa.a\)</span>.</li>
+</ul>
+</section>
+</article>
+<article class="topic tier-high" id="robinsonův-unifikační-algoritmus-a-mgu">
+<header class="topic-header">
+<span class="topic-num" aria-hidden="true">2</span>
+<h2>Robinsonův unifikační
+algoritmus a MGU</h2>
+<span class="freq" title="Výskyt na zkouškách">18×</span>
+</header>
+<section class="answer" aria-label="Odpověď">
+<p>Hledání nejobecnějšího unifikátoru (MGU) pro zadané termy.</p>
+<ul>
+<li><strong>Teoretická část:</strong> Popište vstupy (množina termů
+<span class="math inline">\(\Delta\)</span>), výstupy (substituce <span
+class="math inline">\(\mu\)</span>) a princip hledání nesouhlasných párů
+s kontrolou výskytu.</li>
+<li><strong>Praktická varianta 1:</strong> Unifikujte <span
+class="math inline">\(get(tmp(Y), sum(69, 42), Z)\)</span> a <span
+class="math inline">\(get(X, sum(Y, 42), high(X))\)</span>.
+<ul>
+<li><strong>Výsledek:</strong> MGU je <span
+class="math inline">\([tmp(Y)/X] \circ [69/Y] \circ
+[high(tmp(69))/Z]\)</span>.</li>
+</ul></li>
+<li><strong>Praktická varianta 2:</strong> Unifikujte <span
+class="math inline">\(push(in(Z), min(U, 84), W)\)</span> a <span
+class="math inline">\(push(U, min(U, V), max(V, Y))\)</span>.
+<ul>
+<li><strong>Výsledek:</strong> MGU je <span
+class="math inline">\([in(Z)/U] \circ [84/V] \circ [max(84,
+Y)/W]\)</span>.</li>
+</ul></li>
+</ul>
+</section>
+</article>
+<article class="topic tier-high" id="návrhový-vzor-adaptér">
+<header class="topic-header">
+<span class="topic-num" aria-hidden="true">3</span>
+<h2>Návrhový vzor Adaptér</h2>
+<span class="freq" title="Výskyt na zkouškách">17×</span>
+</header>
+<section class="answer" aria-label="Odpověď">
+<p>Konverze rozhraní třídy na jiné, které klient očekává.</p>
+<ul>
+<li><strong>Řešení:</strong> Adaptér implementuje rozhraní
+<code>Target</code> a vnitřně deleguje volání na objekt
+<code>Adaptee</code>, který má nekompatibilní rozhraní.</li>
+<li><strong>UML diagram:</strong> Klient závisí na <code>Target</code>,
+<code>Adapter</code> realizuje <code>Target</code> a asociací deleguje
+na <code>Adaptee</code>.</li>
+</ul>
+<pre class="mermaid">
+classDiagram
+    class Client {
+        +work()
+    }
+    class Target {
+        <<interface>>
+        +request()
+    }
+    class Adapter {
+        -adaptee
+        +request()
+    }
+    class Adaptee {
+        +specificRequest()
+    }
+    Client --> Target
+    Adapter ..|> Target
+    Adapter --> Adaptee
+</pre>
+<ul>
+<li><strong>Kód (pohled klienta):</strong></li>
+</ul>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode java"><code class="sourceCode java"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">interface</span> <span class="bu">Target</span> <span class="op">{</span> <span class="dt">void</span> <span class="fu">request</span><span class="op">();</span> <span class="op">}</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Adaptee <span class="op">{</span> <span class="dt">void</span> <span class="fu">specificRequest</span><span class="op">()</span> <span class="op">{</span> <span class="co">/* … */</span> <span class="op">}</span> <span class="op">}</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Adapter <span class="kw">implements</span> <span class="bu">Target</span> <span class="op">{</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">private</span> <span class="dt">final</span> Adaptee adaptee<span class="op">;</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">Adapter</span><span class="op">(</span>Adaptee a<span class="op">)</span> <span class="op">{</span> <span class="kw">this</span><span class="op">.</span><span class="fu">adaptee</span> <span class="op">=</span> a<span class="op">;</span> <span class="op">}</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    <span class="kw">public</span> <span class="dt">void</span> <span class="fu">request</span><span class="op">()</span> <span class="op">{</span> adaptee<span class="op">.</span><span class="fu">specificRequest</span><span class="op">();</span> <span class="op">}</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Client <span class="op">{</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    <span class="dt">void</span> <span class="fu">work</span><span class="op">(</span><span class="bu">Target</span> t<span class="op">)</span> <span class="op">{</span> t<span class="op">.</span><span class="fu">request</span><span class="op">();</span> <span class="op">}</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    <span class="dt">void</span> <span class="fu">demo</span><span class="op">()</span> <span class="op">{</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>        <span class="bu">Target</span> adapter <span class="op">=</span> <span class="kw">new</span> <span class="fu">Adapter</span><span class="op">(</span><span class="kw">new</span> <span class="fu">Adaptee</span><span class="op">());</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>        <span class="fu">work</span><span class="op">(</span>adapter<span class="op">);</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+</section>
+</article>
+<article class="topic tier-high" id="návrhový-vzor-dekorátor">
+<header class="topic-header">
+<span class="topic-num" aria-hidden="true">4</span>
+<h2>Návrhový vzor Dekorátor</h2>
+<span class="freq" title="Výskyt na zkouškách">10×</span>
+</header>
+<section class="answer" aria-label="Odpověď">
+<p>Dynamické přidávání funkčnosti objektu bez modifikace jeho třídy.</p>
+<ul>
+<li><strong>Řešení:</strong> Dekorátor implementuje stejné rozhraní jako
+původní objekt a v metodách přidává vlastní logiku před nebo po volání
+původního objektu.</li>
+<li><strong>UML diagram:</strong> <code>Decorator</code> drží odkaz na
+<code>Component</code> a předává volání dál. Konkrétní dekorátor
+rozšiřuje chování.</li>
+</ul>
+<pre class="mermaid">
+classDiagram
+    class Component {
+        <<interface>>
+        +operation()
+    }
+    class ConcreteComponent {
+        +operation()
+    }
+    class Decorator {
+        -wrapped
+        +operation()
+    }
+    class ConcreteDecorator {
+        +operation()
+    }
+    Component <|.. ConcreteComponent
+    Component <|.. Decorator
+    Decorator <|-- ConcreteDecorator
+    Decorator o--> Component
+</pre>
+</section>
+</article>
+<article class="topic tier-high" id="návrhový-vzor-skladba">
+<header class="topic-header">
+<span class="topic-num" aria-hidden="true">5</span>
+<h2>Návrhový vzor Skladba</h2>
+<span class="freq" title="Výskyt na zkouškách">7×</span>
+</header>
+<section class="answer" aria-label="Odpověď">
+<p>Umožňuje pracovat s jednotlivými objekty i jejich skupinami jednotně
+pomocí stromové struktury.</p>
+<ul>
+<li><strong>Řešení:</strong> Společné rozhraní <code>Component</code>
+mají list i složenina. <code>Composite</code> drží kolekci dětí a
+operace propaguje rekurzivně.</li>
+<li><strong>UML diagram:</strong></li>
+</ul>
+<pre class="mermaid">
+classDiagram
+    class Component {
+        <<interface>>
+        +operation()
+        +add()
+        +remove()
+    }
+    class Leaf {
+        +operation()
+    }
+    class Composite {
+        -children
+        +add()
+        +remove()
+        +operation()
+    }
+    Component <|-- Leaf
+    Component <|-- Composite
+    Composite o--> Component
+</pre>
+</section>
+</article>
+<article class="topic tier-medium" id="návrhový-vzor-pozorovatel">
+<header class="topic-header">
+<span class="topic-num" aria-hidden="true">6</span>
+<h2>Návrhový vzor Pozorovatel</h2>
+<span class="freq" title="Výskyt na zkouškách">6×</span>
+</header>
+<section class="answer" aria-label="Odpověď">
+<p>Definuje závislost 1:N mezi objekty, aby při změně stavu jednoho byly
+ostatní informovány.</p>
+<ul>
+<li><strong>Řešení:</strong> <code>Subject</code> drží seznam
+<code>Observer</code> a při změně stavu volá <code>notify()</code>.
+Každý pozorovatel implementuje <code>update()</code>.</li>
+<li><strong>UML diagram:</strong></li>
+</ul>
+<pre class="mermaid">
+classDiagram
+    class Subject {
+        -observers
+        +attach()
+        +detach()
+        +notify()
+    }
+    class ConcreteSubject {
+        -state
+        +getState()
+    }
+    class Observer {
+        <<interface>>
+        +update()
+    }
+    class ConcreteObserver {
+        -subject
+        +update()
+    }
+    Subject <|-- ConcreteSubject
+    Observer <|.. ConcreteObserver
+    Subject o--> Observer
+    ConcreteObserver --> Subject
+</pre>
+<ul>
+<li><strong>Kód (základní idea):</strong></li>
+</ul>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode java"><code class="sourceCode java"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">interface</span> <span class="bu">Observer</span> <span class="op">{</span> <span class="dt">void</span> <span class="fu">update</span><span class="op">();</span> <span class="op">}</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> ConcreteSubject <span class="op">{</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">private</span> <span class="dt">final</span> <span class="bu">List</span><span class="op">&lt;</span><span class="bu">Observer</span><span class="op">&gt;</span> observers <span class="op">=</span> <span class="kw">new</span> <span class="bu">ArrayList</span><span class="op">&lt;&gt;();</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">void</span> <span class="fu">attach</span><span class="op">(</span><span class="bu">Observer</span> o<span class="op">)</span> <span class="op">{</span> observers<span class="op">.</span><span class="fu">add</span><span class="op">(</span>o<span class="op">);</span> <span class="op">}</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">void</span> <span class="fu">setState</span><span class="op">(</span><span class="co">/* … */</span><span class="op">)</span> <span class="op">{</span> <span class="co">/* změna */</span> <span class="fu">notifyAll</span><span class="op">();</span> <span class="op">}</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    <span class="dt">void</span> <span class="fu">notifyAll</span><span class="op">()</span> <span class="op">{</span> <span class="cf">for</span> <span class="op">(</span><span class="bu">Observer</span> o <span class="op">:</span> observers<span class="op">)</span> o<span class="op">.</span><span class="fu">update</span><span class="op">();</span> <span class="op">}</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+</section>
+</article>
+<article class="topic tier-high" id="rozsah-platnosti-scope">
+<header class="topic-header">
+<span class="topic-num" aria-hidden="true">7</span>
+<h2>Rozsah platnosti (Scope)</h2>
+<span class="freq" title="Výskyt na zkouškách">24×</span>
+</header>
+<section class="answer" aria-label="Odpověď">
+<p>Definice a specifika v jazycích C a Python.</p>
+<ul>
+<li><strong>Řešení:</strong> <strong>Rozsah platnosti</strong> je část
+programu, ve které je proměnná viditelná a lze s ní pracovat. V C je dán
+bloky a funkcemi, v Pythonu se rozlišuje lokální, globální a „nonlocal“
+rozsah, přičemž dochází k zakrývání jmen (shadowing).</li>
+</ul>
+</section>
+</article>
+<article class="topic tier-high" id="uzavřený-podprogram">
+<header class="topic-header">
+<span class="topic-num" aria-hidden="true">8</span>
+<h2>Uzavřený podprogram</h2>
+<span class="freq" title="Výskyt na zkouškách">12×</span>
+</header>
+<section class="answer" aria-label="Odpověď">
+<p>Definice klíčového milníku v historii programování.</p>
+<ul>
+<li><strong>Řešení (4 odrážky):</strong> 1. Má jednoznačné jméno. 2. Má
+definované parametry (typ, pořadí). 3. Může vracet výsledek. 4. Má
+vlastní lokální kontext (proměnné a kód).</li>
+<li><strong>Výsledek:</strong> Umožnil rekurzi a ukrytí
+implementace.</li>
+</ul>
+</section>
+</article>
+<article class="topic tier-high" id="způsoby-předávání-parametrů">
+<header class="topic-header">
+<span class="topic-num" aria-hidden="true">9</span>
+<h2>Způsoby předávání parametrů</h2>
+<span class="freq" title="Výskyt na zkouškách">14×</span>
+</header>
+<section class="answer" aria-label="Odpověď">
+<p>Strategie přijímání dat podprogramem.</p>
+<ul>
+<li><strong>Řešení:</strong> <strong>Hodnotou</strong> (vytváří se
+kopie), <strong>odkazem</strong> (předává se adresa nebo ukazatel),
+<strong>jménem</strong> (předává se předpis nebo metoda, vyhodnocuje se
+při každém přístupu).</li>
+</ul>
+</section>
+</article>
+<article class="topic tier-high" id="paměťové-uložení-v-c-2d-pole-struktur">
+<header class="topic-header">
+<span class="topic-num" aria-hidden="true">10</span>
+<h2>Paměťové uložení v C
+(2D pole struktur)</h2>
+<span class="freq" title="Výskyt na zkouškách">12×</span>
+</header>
+<section class="answer" aria-label="Odpověď">
+<p>Výpočet adresy konkrétního prvku s ohledem na zarovnání
+(alignment).</p>
+<ul>
+<li><strong>Řešení:</strong> Adresa prvku <code>a[i][j]</code> se
+vypočte jako: <span class="math inline">\(Addr = A + (i \times sizeY +
+j) \times struct\_size + offset\_polozky\)</span>.</li>
+<li><strong>Důležité:</strong> Je nutné započítat výplňkové bajty
+(<strong>padding</strong>) pro zarovnání na hranici slova (typicky 32
+nebo 64 bitů).</li>
+</ul>
+</section>
+</article>
+<article class="topic tier-high" id="imperativní-vs.-deklarativní-paradigma">
+<header class="topic-header">
+<span class="topic-num" aria-hidden="true">11</span>
+<h2>Imperativní
+vs. deklarativní paradigma</h2>
+<span class="freq" title="Výskyt na zkouškách">13×</span>
+</header>
+<section class="answer" aria-label="Odpověď">
+<p>Srovnání modelu výpočtu a přístupu programátora.</p>
+<ul>
+<li><strong>Řešení:</strong> Imperativní jazyky řeší
+<strong>„jak“</strong> (sekvence příkazů měnících vnitřní stav).
+Deklarativní řeší <strong>„co“</strong> (vlastnosti výsledku), vnitřní
+stav je skrytý a opakování se řeší <strong>rekurzí</strong> místo
+cyklů.</li>
+</ul>
+</section>
+</article>
+<article class="topic tier-high" id="obsah-třídy-a-instance-v-čistém-oo-modelu">
+<header class="topic-header">
+<span class="topic-num" aria-hidden="true">12</span>
+<h2>Obsah třídy a
+instance v čistém OO modelu</h2>
+<span class="freq" title="Výskyt na zkouškách">15×</span>
+</header>
+<section class="answer" aria-label="Odpověď">
+<p>Co přesně tvoří tyto entity v paměti.</p>
+<ul>
+<li><strong>Řešení:</strong> <strong>Třída</strong> obsahuje metadata
+atributů, data statických atributů, kód instančních metod a odkaz na
+svou třídu (metatřídu). <strong>Instance</strong> obsahuje identitu,
+odkaz na svou třídu a konkrétní data instančních atributů.</li>
+</ul>
+</section>
+</article>
+<article class="topic tier-high" id="vícenásobná-dědičnost-a-diamantový-problém">
+<header class="topic-header">
+<span class="topic-num" aria-hidden="true">13</span>
+<h2>Vícenásobná
+dědičnost a diamantový problém</h2>
+<span class="freq" title="Výskyt na zkouškách">11×</span>
+</header>
+<section class="answer" aria-label="Odpověď">
+<p>Problémy spojené s více přímými předky.</p>
+<ul>
+<li><strong>Řešení:</strong> Kolize jmen (stejná jména metod nebo
+atributů), pořadí volání konstruktorů a <strong>diamantová
+struktura</strong>, která způsobuje duplikaci atributů společného předka
+v paměti.</li>
+</ul>
+</section>
+</article>
+<article class="topic tier-medium" id="beztřídní-jazyky-a-self">
+<header class="topic-header">
+<span class="topic-num" aria-hidden="true">14</span>
+<h2>Beztřídní jazyky a SELF</h2>
+<span class="freq" title="Výskyt na zkouškách">6×</span>
+</header>
+<section class="answer" aria-label="Odpověď">
+<p>Principy prototypů a delegace.</p>
+<ul>
+<li><strong>Řešení:</strong> Objekty se skládají ze
+<strong>slotů</strong> (datové, metodové, rodičovské). Nové objekty
+vznikají <strong>klonováním</strong>. Pokud objekt zprávě nerozumí,
+přepošle ji rodiči přes <strong>rodičovský slot</strong>
+(delegace).</li>
+</ul>
+</section>
+</article>
+<article class="topic tier-high" id="sémantika-a-dynamické-chyby-v-c">
+<header class="topic-header">
+<span class="topic-num" aria-hidden="true">15</span>
+<h2>Sémantika a dynamické chyby
+v C</h2>
+<span class="freq" title="Výskyt na zkouškách">10×</span>
+</header>
+<section class="answer" aria-label="Odpověď">
+<p>Definice významu a chyby zjistitelné až za běhu.</p>
+<ul>
+<li><strong>Řešení:</strong> <strong>Sémantika</strong> definuje význam
+syntakticky správných programů. <strong>Dynamické chyby:</strong> dělení
+nulou po vstupu uživatele, přístup mimo rozsah pole, práce s neplatným
+ukazatelem (dangling pointer), přetečení (overflow).</li>
+</ul>
+</section>
+</article>
+<article class="topic tier-high" id="bitová-pole-a-assembler">
+<header class="topic-header">
+<span class="topic-num" aria-hidden="true">16</span>
+<h2>Bitová pole a Assembler</h2>
+<span class="freq" title="Výskyt na zkouškách">12×</span>
+</header>
+<section class="answer" aria-label="Odpověď">
+<p>Nízkoúrovňový přístup k položce v bitovém poli.</p>
+<ul>
+<li><strong>Řešení:</strong> Pro přístup k bitům je nutné: 1. Načíst
+slovo z paměti. 2. Provést <strong>bitový posun</strong> (shift). 3.
+Aplikovat <strong>bitovou masku</strong> (AND) k vyfiltrování cílových
+bitů.</li>
+</ul>
+</section>
+</article>
+<article class="topic tier-high" id="perzistentní-vs.-tranzientní-objekty">
+<header class="topic-header">
+<span class="topic-num" aria-hidden="true">17</span>
+<h2>Perzistentní
+vs. tranzientní objekty</h2>
+<span class="freq" title="Výskyt na zkouškách">8×</span>
+</header>
+<section class="answer" aria-label="Odpověď">
+<p>Doba života objektů vzhledem k běhu aplikace.</p>
+<ul>
+<li><strong>Řešení:</strong> <strong>Perzistentní</strong> objekt
+přežívá ukončení aplikace a po restartu má stejný stav i identitu.
+Deklaruje se slovem <strong><code>persistent</code></strong>.
+<strong>Tranzientní</strong> zaniká nejpozději s ukončením
+programu.</li>
+</ul>
+</section>
+</article>
+<article class="topic tier-high" id="sld-rezoluce">
+<header class="topic-header">
+<span class="topic-num" aria-hidden="true">18</span>
+<h2>SLD rezoluce</h2>
+<span class="freq" title="Výskyt na zkouškách">8×</span>
+</header>
+<section class="answer" aria-label="Odpověď">
+<p>Vyhodnocovací strategie v jazyce Prolog.</p>
+<ul>
+<li><strong>Řešení:</strong> Prohledávání do hloubky, výběr klauzulí
+shora dolů a vyhodnocování těla zleva doprava.</li>
+</ul>
+</section>
+</article>
+
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>
+  mermaid.initialize({ startOnLoad: true, theme: "default", securityLevel: "loose" });
+</script>
+
+</body>
+</html>
