@@ -29,7 +29,6 @@ classDiagram
         +work()
     }
     class Target {
-        <<interface>>
         +request()
     }
     class Adapter {
@@ -76,7 +75,6 @@ Dynamické přidávání funkčnosti objektu bez modifikace jeho třídy.
 ```mermaid
 classDiagram
     class Component {
-        <<interface>>
         +operation()
     }
     class ConcreteComponent {
@@ -89,8 +87,8 @@ classDiagram
     class ConcreteDecorator {
         +operation()
     }
-    Component <|.. ConcreteComponent
-    Component <|.. Decorator
+    ConcreteComponent ..|> Component
+    Decorator ..|> Component
     Decorator <|-- ConcreteDecorator
     Decorator o--> Component
 ```
@@ -105,7 +103,6 @@ Umožňuje pracovat s jednotlivými objekty i jejich skupinami jednotně pomocí
 ```mermaid
 classDiagram
     class Component {
-        <<interface>>
         +operation()
         +add()
         +remove()
@@ -119,8 +116,8 @@ classDiagram
         +remove()
         +operation()
     }
-    Component <|-- Leaf
-    Component <|-- Composite
+    Leaf --|> Component
+    Composite --|> Component
     Composite o--> Component
 ```
 
@@ -144,15 +141,14 @@ classDiagram
         +getState()
     }
     class Observer {
-        <<interface>>
         +update()
     }
     class ConcreteObserver {
         -subject
         +update()
     }
-    Subject <|-- ConcreteSubject
-    Observer <|.. ConcreteObserver
+    ConcreteSubject --|> Subject
+    ConcreteObserver ..|> Observer
     Subject o--> Observer
     ConcreteObserver --> Subject
 ```
