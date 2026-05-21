@@ -111,7 +111,6 @@ classDiagram
         +work()
     }
     class Target {
-        <<interface>>
         +request()
     }
     class Adapter {
@@ -167,7 +166,6 @@ rozšiřuje chování.</li>
 <pre class="mermaid">
 classDiagram
     class Component {
-        <<interface>>
         +operation()
     }
     class ConcreteComponent {
@@ -180,8 +178,8 @@ classDiagram
     class ConcreteDecorator {
         +operation()
     }
-    Component <|.. ConcreteComponent
-    Component <|.. Decorator
+    ConcreteComponent ..|> Component
+    Decorator ..|> Component
     Decorator <|-- ConcreteDecorator
     Decorator o--> Component
 </pre>
@@ -205,7 +203,6 @@ operace propaguje rekurzivně.</li>
 <pre class="mermaid">
 classDiagram
     class Component {
-        <<interface>>
         +operation()
         +add()
         +remove()
@@ -219,8 +216,8 @@ classDiagram
         +remove()
         +operation()
     }
-    Component <|-- Leaf
-    Component <|-- Composite
+    Leaf --|> Component
+    Composite --|> Component
     Composite o--> Component
 </pre>
 </section>
@@ -253,15 +250,14 @@ classDiagram
         +getState()
     }
     class Observer {
-        <<interface>>
         +update()
     }
     class ConcreteObserver {
         -subject
         +update()
     }
-    Subject <|-- ConcreteSubject
-    Observer <|.. ConcreteObserver
+    ConcreteSubject --|> Subject
+    ConcreteObserver ..|> Observer
     Subject o--> Observer
     ConcreteObserver --> Subject
 </pre>
@@ -483,9 +479,15 @@ shora dolů a vyhodnocování těla zleva doprava.</li>
 </section>
 </article>
 
-<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11.15.0/dist/mermaid.min.js"></script>
 <script>
-  mermaid.initialize({ startOnLoad: true, theme: "default", securityLevel: "loose" });
+  mermaid.initialize({ startOnLoad: false, theme: "default", securityLevel: "loose" });
+  document.addEventListener("DOMContentLoaded", function () {
+    var nodes = document.querySelectorAll("pre.mermaid");
+    if (nodes.length) {
+      mermaid.run({ nodes: nodes });
+    }
+  });
 </script>
 
 </body>

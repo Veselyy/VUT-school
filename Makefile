@@ -9,7 +9,7 @@ help:
 	@echo "  make pages-sync      web/ → docs/ (jen pro GitHub Pages)"
 	@echo "  make new-subject CODE=IPK TITLE='IPK — Příprava'"
 
-build-all: build-ipp build-izg
+build-all: build-ipp build-izg pages-sync
 
 build-ipp:
 	python3 tools/study-guide/build.py IPP
@@ -23,6 +23,7 @@ check-html:
 pages-sync:
 	@rm -rf docs
 	@cp -R web docs
+	@touch docs/.nojekyll
 	@echo "Synced web/ → docs/ (GitHub Pages: folder /docs)"
 
 new-subject:

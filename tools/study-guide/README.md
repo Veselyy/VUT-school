@@ -38,13 +38,9 @@ Kontrola (pre-commit nebo ručně): `make check-html`.
 
 Build zapisuje do **`web/`** (intuitivní název).
 
-GitHub vyžaduje složku **`docs/`**. Zkopíruj:
+GitHub vyžaduje složku **`docs/`**. `make build-all` ji naplní automaticky (`pages-sync`: kopie `web/` → `docs/`). Ručně jen při potřebě: `make pages-sync`.
 
-```bash
-make pages-sync
-```
-
-Pak Settings → Pages → branch `main`, folder **`/docs`**.
+Pak Settings → Pages → branch `main`, folder **`/docs`**. Po změně diagramů: `make build-all`, commit `docs/` (`git add -f docs/`), push.
 
 ## Styly (jen HTML)
 
