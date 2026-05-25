@@ -45,8 +45,8 @@ def parse_md_topics(md_text: str) -> list[tuple[int, str]]:
     return topics
 
 
-def parse_vyskyty(text: str) -> list[int]:
-    counts: list[int] = []
+def parse_vyskyty_entries(text: str) -> list[tuple[str, int]]:
+    entries: list[tuple[str, int]] = []
     for line in text.splitlines():
         line = line.strip()
         if not line or line.startswith("#"):
@@ -54,8 +54,16 @@ def parse_vyskyty(text: str) -> list[int]:
         m = FREQ_LINE_RE.match(line)
         if not m:
             raise ValueError(f"Invalid line in {FREQ_FILE}: {line!r} (expected: Název otázky 14x)")
-        counts.append(int(m.group(2)))
-    return counts
+        entries.append((m.group(1).strip(), int(m.group(2))))
+    return entries
+
+
+def plain_vyskyty_label(label: str) -> str:
+    return re.sub(r"\*\*(.+?)\*\*", r"\1", label)
+
+
+def parse_vyskyty(text: str) -> list[int]:
+    return [count for _, count in parse_vyskyty_entries(text)]
 
 
 def resolve_images_dir(subject_dir: Path) -> str:
@@ -84,21 +92,37 @@ def load_previous_freqs(subject_dir: Path) -> list[int] | None:
     return freqs if isinstance(freqs, list) else None
 
 
-def resolve_topic_freqs(subject_dir: Path, topic_count: int) -> list[int]:
+def load_vyskyty_entries(subject_dir: Path, topic_count: int) -> list[tuple[str, int]] | None:
     freq_path = resolve_path(subject_dir, FREQ_FILE, FREQ_FILE)
-    if freq_path.is_file():
-        counts = parse_vyskyty(freq_path.read_text(encoding="utf-8"))
-        if len(counts) != topic_count:
-            raise ValueError(
-                f"{FREQ_FILE} has {len(counts)} lines but {SOURCE_MD} has {topic_count} topics (##)."
-            )
-        return counts
+    if not freq_path.is_file():
+        return None
+    entries = parse_vyskyty_entries(freq_path.read_text(encoding="utf-8"))
+    if len(entries) != topic_count:
+        raise ValueError(
+            f"{FREQ_FILE} has {len(entries)} lines but {SOURCE_MD} has {topic_count} topics (##)."
+        )
+    return entries
+
+
+def resolve_topic_freqs(subject_dir: Path, topic_count: int) -> list[int]:
+    entries = load_vyskyty_entries(subject_dir, topic_count)
+    if entries is not None:
+        return [count for _, count in entries]
 
     previous = load_previous_freqs(subject_dir)
     if previous and len(previous) == topic_count:
         return previous
 
     return [1] * topic_count
+
+
+def resolve_topic_toc_titles(
+    subject_dir: Path, topic_count: int, md_titles: list[str]
+) -> list[str]:
+    entries = load_vyskyty_entries(subject_dir, topic_count)
+    if entries is not None:
+        return [plain_vyskyty_label(label) for label, _ in entries]
+    return md_titles
 
 
 def sync_build_config(subject_dir: Path) -> dict:
@@ -115,7 +139,9 @@ def sync_build_config(subject_dir: Path) -> dict:
     if nums != list(range(1, len(topics) + 1)):
         raise ValueError(f"{SOURCE_MD}: topic numbers must be 1..{len(topics)} without gaps")
 
+    md_titles = [title for _, title in topics]
     freqs = resolve_topic_freqs(subject_dir, len(topics))
+    toc_titles = resolve_topic_toc_titles(subject_dir, len(topics), md_titles)
     images_from = resolve_images_dir(subject_dir)
 
     config: dict = {
@@ -125,7 +151,8 @@ def sync_build_config(subject_dir: Path) -> dict:
         "source": SOURCE_MD,
         "output": OUTPUT_HTML,
         "topic_freq": freqs,
-        "topic_titles": [title for _, title in topics],
+        "topic_titles": md_titles,
+        "topic_toc_titles": toc_titles,
     }
 
     pages = study.get("github_pages") or study.get("web")

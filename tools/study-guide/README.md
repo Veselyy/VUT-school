@@ -11,7 +11,7 @@ python3 tools/study-guide/new_subject.py IPK "IPK — Příprava na zkoušku" --
 | Položka | Popis |
 |---------|--------|
 | `otazky.md` | Otázky, odpovědi, Mermaid |
-| `vyskyty.txt` | `Název otázky 14x` — řádek = jedno `##` v MD |
+| `vyskyty.txt` | Krátký název pro obsah + `14x` — jeden řádek = jedno `##` v MD (pořadí musí sedět). V HTML se obsah i otázky řadí podle počtu výskytů (sestupně). |
 | `podklady/` | Poznámky, PDF |
 | `obrazky/` | Obrázky |
 | `predmet.json` | Titul, `github_pages.slug` |

@@ -5,7 +5,7 @@
 | Soubor / složka | Účel |
 |-----------------|------|
 | `otazky.md` | Všechny otázky, odpovědi, Mermaid |
-| `vyskyty.txt` | Kolikrát na zkoušce (`Název 14x`) |
+| `vyskyty.txt` | Krátký název do obsahu + kolikrát na zkoušce (`Název 14x`) |
 | `podklady/` | Poznámky, PDF |
 | `obrazky/` | Obrázky pro Markdown |
 | `predmet.json` | Titul stránky, slug pro `web/` |

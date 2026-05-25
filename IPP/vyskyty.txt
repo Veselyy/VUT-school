@@ -1,18 +1,24 @@
 Lambda kalkul 35x
 Robinsonův unifikační algoritmus a MGU 18x
+SLD rezoluce 8x
 Návrhový vzor Adaptér 17x
-Návrhový vzor Dekorátor 10x
-Návrhový vzor Skladba 7x
-Návrhový vzor Pozorovatel 6x
+Návrhový vzor Dekorátor 17x
+Návrhový vzor Skladba 17x
+Návrhový vzor Pozorovatel 17x
 Rozsah platnosti (Scope) 24x
 Uzavřený podprogram 12x
 Způsoby předávání parametrů 14x
 Paměťové uložení v C (2D pole struktur) 12x
 Imperativní vs. deklarativní paradigma 13x
 Obsah třídy a instance v čistém OO modelu 15x
-Vícenásobná dědičnost a diamantový problém 11x
-Beztřídní jazyky a SELF 6x
-Sémantika a dynamické chyby v C 10x
+Vícenásobná dědičnost 11x
+Diamantový problém 11x
+Popište objekt v jazyce **SELF**, co je to **dynamická dědičnost** a co je to **aktivační objekt** (třída)? 6x
+Co je to **slot** v beztřídním OOJ (jedna věta) a jaké **typy slotů** existují (3 odrážky) 6x
+OOJ SELF: Jak se vytvářejí objekty, kdo všechno se toho účastní, co se od koho bere a jak se tyto složky volají? 6x
+Uveďte 4 různé sémantické chyby teoreticky zjistitelné dynamicky (během běhu) v jazyku C. 10x
+Co je to sémantika? Jaké způsoby (formalismy) se používají při její definici (4 odrážky)? 10x
 Bitová pole a Assembler 12x
 Perzistentní vs. tranzientní objekty 8x
-SLD rezoluce 8x
+Hornova klauzule 5x
+Polymorfismus 20x

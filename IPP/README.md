@@ -5,7 +5,7 @@
 | Soubor | Účel |
 |--------|------|
 | `otazky.md` | Otázky a odpovědi |
-| `vyskyty.txt` | Výskyty na zkouškách (`35x`) |
+| `vyskyty.txt` | Krátké názvy v obsahu + výskyty (`35x`), řádek = jedna otázka v `otazky.md`. V HTML se řadí podle výskytů. |
 | `podklady/`, `obrazky/` | Materiály a obrázky |
 | `predmet.json` | Titul a slug pro `web/ipp/` |
 

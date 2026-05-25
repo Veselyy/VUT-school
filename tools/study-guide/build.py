@@ -10,6 +10,7 @@ import re
 import shutil
 import subprocess
 import sys
+from dataclasses import dataclass
 from pathlib import Path
 
 from html_format import format_html
@@ -28,17 +29,63 @@ WEB_ROOT = "web"
 TOOL_DIR = Path(__file__).resolve().parent
 REPO_ROOT = TOOL_DIR.parent.parent
 
-TOC_LINK_RE = re.compile(
-    r"<li>\s*<a\s+[^>]*href=\"#([^\"]+)\"[^>]*>(.*?)</a>\s*</li>",
-    re.DOTALL | re.IGNORECASE,
-)
-
 MERMAID_RE = re.compile(
     r'<pre class="mermaid"><code>(.*?)</code></pre>',
     re.DOTALL,
 )
 
 H2_COUNT_RE = re.compile(r"<h2\s+id=\"", re.IGNORECASE)
+
+H2_TOPIC_RE = re.compile(
+    r'<h2\s+id="([^"]+)">(\d+)\.\s+(.*?)(?:\s+\([^)]*výskyt[^)]*\))?</h2>(.*)',
+    re.DOTALL | re.IGNORECASE,
+)
+
+
+@dataclass
+class Topic:
+    anchor: str
+    heading_html: str
+    body: str
+    freq: int
+    toc_title: str
+    source_order: int
+
+MATH_SPAN_RE = re.compile(
+    r'<span\s+class="math inline">\s*\\\((.+?)\\\)\s*</span>',
+    re.DOTALL | re.IGNORECASE,
+)
+STRONG_RE = re.compile(r"<strong>(.*?)</strong>", re.DOTALL | re.IGNORECASE)
+HTML_TAG_RE = re.compile(r"<[^>]+>")
+
+LATEX_UNICODE = {
+    "alpha": "α",
+    "beta": "β",
+    "lambda": "λ",
+    "mu": "μ",
+    "sigma": "σ",
+}
+
+
+def latex_inline_to_unicode(tex: str) -> str:
+    key = tex.strip().lstrip("\\")
+    return LATEX_UNICODE.get(key, tex)
+
+
+def flatten_heading_html(fragment: str) -> str:
+    """Pandoc inline HTML (math, strong) → plain text for TOC."""
+
+    def math_repl(match: re.Match[str]) -> str:
+        return latex_inline_to_unicode(match.group(1))
+
+    text = MATH_SPAN_RE.sub(math_repl, fragment)
+    text = STRONG_RE.sub(r"\1", text)
+    text = HTML_TAG_RE.sub("", text)
+    return html.unescape(re.sub(r"\s+", " ", text).strip())
+
+
+def normalize_heading_html(fragment: str) -> str:
+    return re.sub(r"\s+", " ", fragment).strip()
 
 
 def load_config(subject_dir: Path) -> dict:
@@ -73,77 +120,96 @@ def fix_mermaid_blocks(doc: str) -> str:
     return MERMAID_RE.sub(repl, doc)
 
 
-def transform_toc(toc_html: str, freqs: list[int]) -> str:
-    idx = 0
-
-    def repl_li(match: re.Match[str]) -> str:
-        nonlocal idx
-        anchor = match.group(1)
-        raw = re.sub(r"\s+", " ", match.group(2)).strip()
-        m = re.match(r"^(\d+)\.\s+(.+?)(?:\s+\([^)]+\))?$", raw, re.IGNORECASE)
-        if not m:
-            return match.group(0)
-        num, title = m.group(1), m.group(2).strip()
-        count = freqs[idx] if idx < len(freqs) else 0
-        idx += 1
-        t = tier(count)
-        return (
-            f'<li class="tier-{t}"><a href="#{anchor}">'
-            f'<span class="toc-num">{num}.</span> {html.escape(title)} '
-            f'<span class="toc-freq">{count}×</span></a></li>'
-        )
-
-    return TOC_LINK_RE.sub(repl_li, toc_html)
-
-
-def wrap_topics(main_html: str, freqs: list[int]) -> str:
+def parse_topics(main_html: str, freqs: list[int], toc_titles: list[str]) -> list[Topic]:
     parts = re.split(r"(?=<h2\s+id=)", main_html)
-    intro = parts[0].strip()
-    if intro:
-        intro = f'<div class="intro">{intro}</div>\n'
-    articles: list[str] = []
+    topics: list[Topic] = []
 
     for i, part in enumerate(parts[1:]):
-        m = re.match(
-            r'<h2\s+id="([^"]+)">(\d+)\.\s+([^<]+?)(?:\s+\([^)]*výskyt[^)]*\))?</h2>(.*)',
-            part,
-            re.DOTALL | re.IGNORECASE,
-        )
+        m = H2_TOPIC_RE.match(part)
         if not m:
             continue
-        tid, num, title, body = m.group(1), m.group(2), m.group(3).strip(), m.group(4)
-        count = freqs[i] if i < len(freqs) else 0
-        t = tier(count)
+        title_fallback = flatten_heading_html(normalize_heading_html(m.group(3)))
+        topics.append(
+            Topic(
+                anchor=m.group(1),
+                heading_html=normalize_heading_html(m.group(3)),
+                body=m.group(4).strip(),
+                freq=freqs[i] if i < len(freqs) else 0,
+                toc_title=toc_titles[i] if i < len(toc_titles) else title_fallback,
+                source_order=i,
+            )
+        )
+
+    return topics
+
+
+def sort_topics_by_freq(topics: list[Topic]) -> list[Topic]:
+    return sorted(topics, key=lambda t: (-t.freq, t.source_order))
+
+
+def render_toc(topics: list[Topic]) -> str:
+    items: list[str] = []
+    for rank, topic in enumerate(topics, start=1):
+        t = tier(topic.freq)
+        items.append(
+            f'<li class="tier-{t}"><a href="#{topic.anchor}">'
+            f'<span class="toc-num">{rank}.</span>'
+            f'<span class="toc-title">{html.escape(topic.toc_title)}</span>'
+            f'<span class="toc-freq">{topic.freq}×</span></a></li>'
+        )
+    return f'<nav id="TOC" role="doc-toc">\n<ul>\n' + "\n".join(items) + "\n</ul>\n</nav>"
+
+
+def render_articles(topics: list[Topic]) -> str:
+    articles: list[str] = []
+    for rank, topic in enumerate(topics, start=1):
+        t = tier(topic.freq)
         articles.append(
-            f'<article class="topic tier-{t}" id="{tid}">\n'
+            f'<article class="topic tier-{t}" id="{topic.anchor}">\n'
             f'<header class="topic-header">\n'
-            f'<span class="topic-num" aria-hidden="true">{num}</span>\n'
-            f"<h2>{html.escape(title)}</h2>\n"
-            f'<span class="freq" title="Výskyt na zkouškách">{count}×</span>\n'
+            f'<span class="topic-num" aria-hidden="true">{rank}</span>\n'
+            f"<h2>{topic.heading_html}</h2>\n"
+            f'<span class="freq" title="Výskyt na zkouškách">{topic.freq}×</span>\n'
             f"</header>\n"
             f'<section class="answer" aria-label="Odpověď">\n'
-            f"{body.strip()}\n"
+            f"{topic.body}\n"
             f"</section>\n"
             f"</article>\n"
         )
+    return "".join(articles)
 
-    return intro + "".join(articles)
 
-
-def apply_layout(doc: str, freqs: list[int]) -> str:
+def apply_layout(doc: str, freqs: list[int], toc_titles: list[str]) -> str:
     doc = fix_mermaid_blocks(doc)
 
     toc_m = re.search(r'(<nav id="TOC".*?</nav>)', doc, re.DOTALL)
     if not toc_m:
         raise ValueError("Missing TOC in pandoc output (use ## headings for topics)")
-    new_toc = transform_toc(toc_m.group(1), freqs)
-    doc = doc[: toc_m.start()] + new_toc + doc[toc_m.end() :]
 
     body_m = re.search(r"</nav>\s*(.*)\s*</body>", doc, re.DOTALL)
     if not body_m:
         raise ValueError("Missing body content after TOC")
-    wrapped = wrap_topics(body_m.group(1), freqs)
-    return doc[: body_m.start(1)] + wrapped + doc[body_m.end(1) :]
+
+    topics = parse_topics(body_m.group(1), freqs, toc_titles)
+    if len(topics) != len(freqs):
+        raise ValueError(f"Parsed {len(topics)} topics, expected {len(freqs)}")
+
+    sorted_topics = sort_topics_by_freq(topics)
+    parts = re.split(r"(?=<h2\s+id=)", body_m.group(1))
+    intro = parts[0].strip()
+    intro_html = f'<div class="intro">{intro}</div>\n' if intro else ""
+
+    main = intro_html + render_articles(sorted_topics)
+    tail = doc[body_m.end() :]
+    if not tail.lstrip().startswith("</body>"):
+        tail = "</body>\n" + tail
+    return (
+        doc[: toc_m.start()]
+        + render_toc(sorted_topics)
+        + "\n"
+        + main
+        + tail
+    )
 
 
 def extra_css_href(subject_dir: Path, config: dict) -> str | None:
@@ -198,13 +264,16 @@ def build_subject(subject_dir: Path) -> Path:
     output = subject_dir / config["output"]
     lang = config.get("lang", "cs")
     freqs = config["topic_freq"]
+    toc_titles = config.get("topic_toc_titles", config.get("topic_titles", []))
 
     raw = run_pandoc(source, lang)
     n = len(H2_COUNT_RE.findall(raw))
     if n != len(freqs):
         raise ValueError(f"Internal mismatch: {n} topics in HTML, {len(freqs)} frequencies")
+    if len(toc_titles) != n:
+        raise ValueError(f"Internal mismatch: {n} topics in HTML, {len(toc_titles)} TOC titles")
 
-    layout = apply_layout(raw, freqs)
+    layout = apply_layout(raw, freqs, toc_titles)
     extra_href = extra_css_href(subject_dir, config)
 
     local_html = format_html(

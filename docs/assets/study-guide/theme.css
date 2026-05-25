@@ -30,7 +30,7 @@ html {
 
 body {
   margin: 0 auto;
-  max-width: min(100%, 960px);
+  max-width: min(100%, 1200px);
   padding: 2rem 1.25rem 4rem;
   font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
   font-size: 1.05rem;
@@ -145,12 +145,12 @@ nav#TOC::before {
 
 #TOC a {
   display: flex;
-  align-items: baseline;
-  gap: 0.35rem;
-  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: nowrap;
   color: #cffafe;
   text-decoration: none;
-  padding: 0.2em 0;
+  padding: 0.35em 0;
   border-bottom: 1px solid transparent;
 }
 
@@ -160,15 +160,25 @@ nav#TOC::before {
 }
 
 .toc-num {
+  flex-shrink: 0;
   opacity: 0.75;
   min-width: 1.75rem;
+  line-height: 1.35;
+}
+
+.toc-title {
+  flex: 1;
+  min-width: 0;
+  line-height: 1.35;
 }
 
 .toc-freq {
-  margin-left: auto;
+  flex-shrink: 0;
   font-size: 0.8rem;
   font-weight: 700;
   opacity: 0.9;
+  line-height: 1.35;
+  white-space: nowrap;
 }
 
 #TOC .tier-high .toc-freq {
