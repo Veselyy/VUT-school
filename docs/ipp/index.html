@@ -178,19 +178,37 @@ Y)/W]\)</span>.</li>
 na <code>Adaptee</code>.</li>
 </ul>
 <pre class="mermaid">
+---
+config:
+  class:
+    hideEmptyMembersBox: true
+---
 classDiagram
-    class Client
-    class Target
-    class Adapter
-    class Adaptee
-    <<interface>> Target
-    Target : +request()
-    Adapter : +request()
-    Adaptee : +specificRequest()
-    Client --> Target
-    Adapter ..|> Target : realizuje
-    Adapter --> Adaptee : "deleguje na"
+    Client --&gt; Target
+    Adapter ..|&gt; Target : realizuje
+    Adapter --&gt; Adaptee : deleguje na
+
+    class Client {
+        +work()
+    }
+    class Target {
+        &lt;&lt;interface&gt;&gt;
+        +request()
+    }
+    class Adapter {
+        -adaptee Adaptee
+        +request()
+    }
+    class Adaptee {
+        +specificRequest()
+    }
 </pre>
+<p><strong>Význam šipek:</strong> <code>Client --&gt; Target</code> –
+klient používá rozhraní <code>Target</code>.
+<code>Adapter ..|&gt; Target</code> (realizuje) – <code>Adapter</code>
+implementuje <code>Target</code>. <code>Adapter --&gt; Adaptee</code>
+(deleguje na) – <code>Adapter</code> uvnitř volá
+<code>Adaptee</code>.</p>
 </section>
 </article>
 <article class="topic tier-high" id="návrhový-vzor-dekorátor">
@@ -210,21 +228,40 @@ původního objektu.</li>
 rozšiřuje chování.</li>
 </ul>
 <pre class="mermaid">
+---
+config:
+  class:
+    hideEmptyMembersBox: true
+---
 classDiagram
-    class Component
-    class ConcreteComponent
-    class Decorator
-    class ConcreteDecorator
-    <<interface>> Component
-    Component : +operation()
-    ConcreteComponent : +operation()
-    Decorator : +operation()
-    ConcreteDecorator : +operation()
-    ConcreteComponent ..|> Component
-    Decorator ..|> Component
+    ConcreteComponent ..|&gt; Component
+    Decorator ..|&gt; Component
     Decorator o-- Component : obaluje
-    ConcreteDecorator --|> Decorator
+    ConcreteDecorator --|&gt; Decorator
+
+    class Component {
+        &lt;&lt;interface&gt;&gt;
+        +operation()
+    }
+    class ConcreteComponent {
+        +operation()
+    }
+    class Decorator {
+        -component Component
+        +operation()
+    }
+    class ConcreteDecorator {
+        +operation()
+    }
 </pre>
+<p><strong>Význam šipek:</strong>
+<code>ConcreteComponent ..|&gt; Component</code> –
+<code>ConcreteComponent</code> je <code>Component</code>.
+<code>Decorator ..|&gt; Component</code> – <code>Decorator</code> je
+<code>Component</code>. <code>Decorator o-- Component</code> (obaluje) –
+<code>Decorator</code> drží vnitřní <code>Component</code>.
+<code>ConcreteDecorator --|&gt; Decorator</code> –
+<code>ConcreteDecorator</code> rozšiřuje <code>Decorator</code>.</p>
 </section>
 </article>
 <article class="topic tier-high" id="návrhový-vzor-skladba">
@@ -243,20 +280,36 @@ operace propaguje rekurzivně.</li>
 <li><strong>UML diagram:</strong></li>
 </ul>
 <pre class="mermaid">
+---
+config:
+  class:
+    hideEmptyMembersBox: true
+---
 classDiagram
-    class Component
-    class Leaf
-    class Composite
-    <<interface>> Component
-    Component : +operation()
-    Component : +add()
-    Component : +remove()
-    Leaf : +operation()
-    Composite : +operation()
-    Leaf ..|> Component
-    Composite ..|> Component
-    Composite o-- Component : "obsahuje deti"
+    Leaf ..|&gt; Component
+    Composite ..|&gt; Component
+    Composite o-- Component : obsahuje deti
+
+    class Component {
+        &lt;&lt;interface&gt;&gt;
+        +operation()
+        +add()
+        +remove()
+    }
+    class Leaf {
+        +operation()
+    }
+    class Composite {
+        -children
+        +operation()
+    }
 </pre>
+<p><strong>Význam šipek:</strong> <code>Leaf ..|&gt; Component</code> –
+<code>Leaf</code> je <code>Component</code>.
+<code>Composite ..|&gt; Component</code> – <code>Composite</code> je
+<code>Component</code>. <code>Composite o-- Component</code> (obsahuje
+deti) – <code>Composite</code> má v sobě další
+<code>Component</code>.</p>
 </section>
 </article>
 <article class="topic tier-high" id="návrhový-vzor-pozorovatel">
@@ -275,24 +328,44 @@ Každý pozorovatel implementuje <code>update()</code>.</li>
 <li><strong>UML diagram:</strong></li>
 </ul>
 <pre class="mermaid">
+---
+config:
+  class:
+    hideEmptyMembersBox: true
+---
 classDiagram
-    class Subject
-    class Observer
-    class ConcreteSubject
-    class ConcreteObserver
-    <<interface>> Observer
-    Subject : +attach()
-    Subject : +detach()
-    Subject : +notify()
-    Observer : +update()
-    ConcreteSubject : +getState()
-    ConcreteSubject : +setState()
-    ConcreteObserver : +update()
-    Subject --> Observer : informuje
-    ConcreteSubject --|> Subject : "dědí"
-    ConcreteObserver ..|> Observer : realizuje
-    ConcreteObserver --> ConcreteSubject : pozoruje
+    Subject --&gt; Observer : informuje
+    ConcreteSubject --|&gt; Subject
+    ConcreteObserver ..|&gt; Observer
+    ConcreteObserver --&gt; ConcreteSubject : pozoruje
+
+    class Observer {
+        &lt;&lt;interface&gt;&gt;
+        +update()
+    }
+    class Subject {
+        -observers
+        +attach()
+        +detach()
+        +notify()
+    }
+    class ConcreteSubject {
+        -subjectState
+        +getState()
+        +setState()
+    }
+    class ConcreteObserver {
+        +update()
+    }
 </pre>
+<p><strong>Význam šipek:</strong> <code>Subject --&gt; Observer</code>
+(informuje) – <code>Subject</code> informuje <code>Observer</code>.
+<code>ConcreteSubject --|&gt; Subject</code> –
+<code>ConcreteSubject</code> rozšiřuje <code>Subject</code>.
+<code>ConcreteObserver ..|&gt; Observer</code> –
+<code>ConcreteObserver</code> implementuje <code>Observer</code>.
+<code>ConcreteObserver --&gt; ConcreteSubject</code> (pozoruje) –
+<code>ConcreteObserver</code> sleduje <code>ConcreteSubject</code>.</p>
 </section>
 </article>
 <article class="topic tier-high" id="co-obsahuje-třída-a-co-instance-v-čistě-třídně-zaměřených-objektových-jazycích-4-2-odrážky">
@@ -590,18 +663,8 @@ implikaci <span class="math inline">\(B_1 \land B_2 \land ... \land B_n
 </section>
 </article>
 
-<script src="https://cdn.jsdelivr.net/npm/mermaid@11.15.0/dist/mermaid.min.js"></script>
-<script>
-  mermaid.initialize({ startOnLoad: false, theme: "default", securityLevel: "loose" });
-  document.addEventListener("DOMContentLoaded", async function () {
-    var nodes = Array.from(document.querySelectorAll("pre.mermaid"));
-    nodes.forEach(function (el) {
-      el.textContent = el.textContent.trim();
-    });
-    if (nodes.length) {
-      await mermaid.run({ nodes: nodes });
-    }
-  });
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
 </script>
 
 </body>

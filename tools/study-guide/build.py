@@ -112,10 +112,20 @@ def run_pandoc(md_path: Path, lang: str) -> str:
     return result.stdout
 
 
+def escape_mermaid_for_html(code: str) -> str:
+    """Escape < > so HTML parser does not break; Mermaid reads decoded text from DOM."""
+    return (
+        code.replace("&", "&amp;")
+        .replace("<", "&lt;")
+        .replace(">", "&gt;")
+    )
+
+
 def fix_mermaid_blocks(doc: str) -> str:
     def repl(match: re.Match[str]) -> str:
         content = html.unescape(match.group(1).strip())
-        return f'<pre class="mermaid">\n{content}\n</pre>'
+        escaped = escape_mermaid_for_html(content)
+        return f'<pre class="mermaid">\n{escaped}\n</pre>'
 
     return MERMAID_RE.sub(repl, doc)
 
@@ -224,7 +234,7 @@ def extra_css_href(subject_dir: Path, config: dict) -> str | None:
 def inject_theme(doc: str, theme_href: str, extra_href: str | None = None) -> str:
     links = stylesheet_links(theme_href, extra_href)
     doc = re.sub(r"<style>.*?</style>", links, doc, count=1, flags=re.DOTALL)
-    if MERMAID_SCRIPT.strip() not in doc:
+    if 'pre class="mermaid"' in doc and MERMAID_SCRIPT.strip() not in doc:
         doc = doc.replace("</body>", f"{MERMAID_SCRIPT}\n</body>")
     return doc
 

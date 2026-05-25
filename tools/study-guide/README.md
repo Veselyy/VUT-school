@@ -32,6 +32,8 @@ make build-all
 
 Vygenerované HTML se na konci buildu formátuje přes [Prettier](https://prettier.io) (`prettier` v PATH, jinak `npx prettier@3.5.3`). Konfigurace: `tools/study-guide/.prettierrc.json`.
 
+Mermaid diagramy: `<pre class="mermaid">` + Mermaid 11 ESM z CDN ([postup na SO](https://stackoverflow.com/a/79725105)). Build escapuje `&lt;&lt;interface&gt;&gt;` v HTML.
+
 Kontrola (pre-commit nebo ručně): `make check-html`.
 
 ## GitHub Pages

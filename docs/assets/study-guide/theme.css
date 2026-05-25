@@ -449,6 +449,21 @@ pre.mermaid svg {
   max-width: 100%;
 }
 
+figure.mermaid-diagram {
+  margin: 1.5rem 0;
+  text-align: center;
+}
+
+figure.mermaid-diagram img {
+  max-width: 100%;
+  height: auto;
+  background: #f8fafc;
+  border: 1px solid #cbd5e1;
+  border-radius: 12px;
+  padding: 1rem;
+  box-sizing: border-box;
+}
+
 table {
   width: 100%;
   border-collapse: collapse;

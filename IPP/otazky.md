@@ -41,19 +41,33 @@ Konverze rozhraní třídy na jiné, které klient očekává.
 - **UML diagram:** Klient závisí na `Target`, `Adapter` realizuje `Target` a asociací deleguje na `Adaptee`.
 
 ```mermaid
+---
+config:
+  class:
+    hideEmptyMembersBox: true
+---
 classDiagram
-    class Client
-    class Target
-    class Adapter
-    class Adaptee
-    <<interface>> Target
-    Target : +request()
-    Adapter : +request()
-    Adaptee : +specificRequest()
     Client --> Target
     Adapter ..|> Target : realizuje
-    Adapter --> Adaptee : "deleguje na"
+    Adapter --> Adaptee : deleguje na
+
+    class Client {
+        +work()
+    }
+    class Target {
+        <<interface>>
+        +request()
+    }
+    class Adapter {
+        -adaptee Adaptee
+        +request()
+    }
+    class Adaptee {
+        +specificRequest()
+    }
 ```
+
+**Význam šipek:** `Client --> Target` – klient používá rozhraní `Target`. `Adapter ..|> Target` (realizuje) – `Adapter` implementuje `Target`. `Adapter --> Adaptee` (deleguje na) – `Adapter` uvnitř volá `Adaptee`.
 
 ## 5. Návrhový vzor Dekorátor
 
@@ -63,21 +77,34 @@ Dynamické přidávání funkčnosti objektu bez modifikace jeho třídy.
 - **UML diagram:** `Decorator` drží odkaz na `Component` a předává volání dál. Konkrétní dekorátor rozšiřuje chování.
 
 ```mermaid
+---
+config:
+  class:
+    hideEmptyMembersBox: true
+---
 classDiagram
-    class Component
-    class ConcreteComponent
-    class Decorator
-    class ConcreteDecorator
-    <<interface>> Component
-    Component : +operation()
-    ConcreteComponent : +operation()
-    Decorator : +operation()
-    ConcreteDecorator : +operation()
     ConcreteComponent ..|> Component
     Decorator ..|> Component
     Decorator o-- Component : obaluje
     ConcreteDecorator --|> Decorator
+
+    class Component {
+        <<interface>>
+        +operation()
+    }
+    class ConcreteComponent {
+        +operation()
+    }
+    class Decorator {
+        -component Component
+        +operation()
+    }
+    class ConcreteDecorator {
+        +operation()
+    }
 ```
+
+**Význam šipek:** `ConcreteComponent ..|> Component` – `ConcreteComponent` je `Component`. `Decorator ..|> Component` – `Decorator` je `Component`. `Decorator o-- Component` (obaluje) – `Decorator` drží vnitřní `Component`. `ConcreteDecorator --|> Decorator` – `ConcreteDecorator` rozšiřuje `Decorator`.
 
 ## 6. Návrhový vzor Skladba
 
@@ -87,20 +114,32 @@ Umožňuje pracovat s jednotlivými objekty i jejich skupinami jednotně pomocí
 - **UML diagram:**
 
 ```mermaid
+---
+config:
+  class:
+    hideEmptyMembersBox: true
+---
 classDiagram
-    class Component
-    class Leaf
-    class Composite
-    <<interface>> Component
-    Component : +operation()
-    Component : +add()
-    Component : +remove()
-    Leaf : +operation()
-    Composite : +operation()
     Leaf ..|> Component
     Composite ..|> Component
-    Composite o-- Component : "obsahuje deti"
+    Composite o-- Component : obsahuje deti
+
+    class Component {
+        <<interface>>
+        +operation()
+        +add()
+        +remove()
+    }
+    class Leaf {
+        +operation()
+    }
+    class Composite {
+        -children
+        +operation()
+    }
 ```
+
+**Význam šipek:** `Leaf ..|> Component` – `Leaf` je `Component`. `Composite ..|> Component` – `Composite` je `Component`. `Composite o-- Component` (obsahuje deti) – `Composite` má v sobě další `Component`.
 
 ## 7. Návrhový vzor Pozorovatel
 
@@ -110,24 +149,38 @@ Definuje závislost 1:N mezi objekty, aby při změně stavu jednoho byly ostatn
 - **UML diagram:**
 
 ```mermaid
+---
+config:
+  class:
+    hideEmptyMembersBox: true
+---
 classDiagram
-    class Subject
-    class Observer
-    class ConcreteSubject
-    class ConcreteObserver
-    <<interface>> Observer
-    Subject : +attach()
-    Subject : +detach()
-    Subject : +notify()
-    Observer : +update()
-    ConcreteSubject : +getState()
-    ConcreteSubject : +setState()
-    ConcreteObserver : +update()
     Subject --> Observer : informuje
-    ConcreteSubject --|> Subject : "dědí"
-    ConcreteObserver ..|> Observer : realizuje
+    ConcreteSubject --|> Subject
+    ConcreteObserver ..|> Observer
     ConcreteObserver --> ConcreteSubject : pozoruje
+
+    class Observer {
+        <<interface>>
+        +update()
+    }
+    class Subject {
+        -observers
+        +attach()
+        +detach()
+        +notify()
+    }
+    class ConcreteSubject {
+        -subjectState
+        +getState()
+        +setState()
+    }
+    class ConcreteObserver {
+        +update()
+    }
 ```
+
+**Význam šipek:** `Subject --> Observer` (informuje) – `Subject` informuje `Observer`. `ConcreteSubject --|> Subject` – `ConcreteSubject` rozšiřuje `Subject`. `ConcreteObserver ..|> Observer` – `ConcreteObserver` implementuje `Observer`. `ConcreteObserver --> ConcreteSubject` (pozoruje) – `ConcreteObserver` sleduje `ConcreteSubject`.
 
 ## 8. Detailně vysvětlete pojem rozsah platnosti proměnné (scope). Uvažte jazyk C a jazyk Python — pro každý jazyk popište, co je pro něj typické stran tohoto pojmu
 

@@ -15,6 +15,6 @@
 ./build.sh
 ```
 
-Vygeneruje `_build.json`, `otazky.html` a `web/ipp/`.
+Vygeneruje `_build.json`, `otazky.html` a `web/ipp/`. UML diagramy se vykreslí v prohlížeči (Mermaid 11 z CDN, potřeba internet).
 
 [Workflow](../tools/study-guide/README.md)

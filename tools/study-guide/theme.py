@@ -80,18 +80,9 @@ def footer_block(text: str) -> str:
     return f"  <footer>\n    {text}\n  </footer>\n"
 
 
+# Embed pattern: https://stackoverflow.com/a/79725105 (dennuguyen, CC BY-SA 4.0)
 MERMAID_SCRIPT = """
-<script src="https://cdn.jsdelivr.net/npm/mermaid@11.15.0/dist/mermaid.min.js"></script>
-<script>
-  mermaid.initialize({ startOnLoad: false, theme: "default", securityLevel: "loose" });
-  document.addEventListener("DOMContentLoaded", async function () {
-    var nodes = Array.from(document.querySelectorAll("pre.mermaid"));
-    nodes.forEach(function (el) {
-      el.textContent = el.textContent.trim();
-    });
-    if (nodes.length) {
-      await mermaid.run({ nodes: nodes });
-    }
-  });
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
 </script>
 """
