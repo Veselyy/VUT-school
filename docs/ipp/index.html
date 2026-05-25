@@ -48,27 +48,31 @@
 <section class="answer" aria-label="Odpověď">
 <p><strong>Příklad demonstrace:</strong> <span
 class="math inline">\((\lambda uw.u(\lambda uw.w)w)(\lambda
-w.w)\)</span> 1. <strong><span
-class="math inline">\(\beta\)</span>-redukce:</strong> <span
-class="math inline">\((\lambda w.(\lambda w.w)(\lambda uw.w)w)\)</span>
-kde <span class="math inline">\([(\lambda w.w)/u]\)</span>. 2.
-<strong><span class="math inline">\(\beta\)</span>-redukce:</strong>
+w.w)\)</span></p>
+<ol type="1">
+<li><strong><span class="math inline">\(\beta\)</span>-redukce:</strong>
+<span class="math inline">\((\lambda w.(\lambda w.w)(\lambda
+uw.w)w)\)</span> kde <span class="math inline">\([(\lambda
+w.w)/u]\)</span></li>
+<li><strong><span class="math inline">\(\beta\)</span>-redukce:</strong>
 <span class="math inline">\((\lambda w.(\lambda uw.w)w)\)</span> kde
-<span class="math inline">\([(\lambda uw.w)/w]\)</span>. 3.
-<strong><span class="math inline">\(\beta\)</span>-redukce:</strong>
+<span class="math inline">\([(\lambda uw.w)/w]\)</span></li>
+<li><strong><span class="math inline">\(\beta\)</span>-redukce:</strong>
 <span class="math inline">\((\lambda w.(\lambda w.w))\)</span> kde <span
-class="math inline">\([w/u]\)</span>. 4. <strong>Výsledný term:</strong>
-<span class="math inline">\(\lambda ww.w\)</span>.</p>
+class="math inline">\([w/u]\)</span></li>
+<li><strong>Výsledný term:</strong> <span class="math inline">\(\lambda
+ww.w\)</span></li>
+</ol>
 <ul>
-<li><strong>Varianta A:</strong> <span class="math inline">\((\lambda
+<li><p><strong>Varianta A:</strong> <span class="math inline">\((\lambda
 ab.a(\lambda a.a)b)(\lambda ab.a)\)</span>. <strong>Výsledek:</strong>
-<span class="math inline">\(\lambda ba.a\)</span>.</li>
-<li><strong>Varianta B:</strong> <span class="math inline">\((\lambda
+<span class="math inline">\(\lambda ba.a\)</span>.</p></li>
+<li><p><strong>Varianta B:</strong> <span class="math inline">\((\lambda
 uw.u(\lambda uw.w)w)(\lambda w.w)\)</span>. <strong>Výsledek:</strong>
-<span class="math inline">\(\lambda ww.w\)</span>.</li>
-<li><strong>Varianta C:</strong> <span class="math inline">\((\lambda
+<span class="math inline">\(\lambda ww.w\)</span>.</p></li>
+<li><p><strong>Varianta C:</strong> <span class="math inline">\((\lambda
 za.z(\lambda a.a)a)(\lambda za.z)\)</span>. <strong>Výsledek:</strong>
-<span class="math inline">\(\lambda aa.a\)</span>.</li>
+<span class="math inline">\(\lambda aa.a\)</span>.</p></li>
 </ul>
 </section>
 </article>
@@ -80,12 +84,11 @@ za.z(\lambda a.a)a)(\lambda za.z)\)</span>. <strong>Výsledek:</strong>
 </header>
 <section class="answer" aria-label="Odpověď">
 <p><strong>Rozsah platnosti proměnné (scope)</strong> určuje tu část
-programu (textu), ve které je identifikátor proměnné viditelný a lze s
-ním pracovat (přistupovat k entitě).</p>
+programu, ve které je ta proměnná viditelná a lze s ním pracovat.</p>
 <ul>
 <li><p><strong>Jazyk C (typické vlastnosti):</strong> Pro jazyk C je
 typická <strong>statická vazba</strong> rozsahu platnosti, která je dána
-strukturou bloků a funkcí ve zdrojovém textu; v rámci zanořených bloků
+strukturou bloků a funkcí ve zdrojovém textu - v rámci zanořených bloků
 může lokální proměnná zakrýt (shadowing) globální proměnnou stejného
 jména.</p></li>
 <li><p><strong>Jazyk Python (typické vlastnosti):</strong> V Pythonu je
@@ -110,10 +113,9 @@ individuální reakci (invokaci různých metod), protože odesílatel nezná
 konkrétní implementaci.</p>
 <p><strong>Polymorfismus bez dědičnosti:</strong> Ano, je možný. Využívá
 se u beztřídních jazyků nebo u jazyků s <strong>Duck Typingem</strong>,
-kde je důležité rozhraní (seznam zpráv, kterým objekt rozumí), nikoliv
-jeho typ či umístění v hierarchii. * <strong>Příklady:</strong> Jazyk
-<strong>SELF</strong> (založený na prototypech) nebo
-<strong>Python</strong> (dynamické typování).</p>
+kde je důležité rozhraní, nikoliv jeho typ či umístění v hierarchii.</p>
+<p><strong>Příklady:</strong> Jazyk <strong>SELF</strong> nebo
+<strong>Python</strong>.</p>
 </section>
 </article>
 <article class="topic tier-high" id="pro-níže-uvedené-dvojice-termů-uveďte-nejobecnější-unifikátor-mgu-ke-každé-dvojici-a-term-vzniklý-aplikací-tohoto-nejobecnějšího-unifikátoru.">
@@ -123,41 +125,35 @@ jeho typ či umístění v hierarchii. * <strong>Příklady:</strong> Jazyk
 <span class="freq" title="Výskyt na zkouškách">18×</span>
 </header>
 <section class="answer" aria-label="Odpověď">
-<p><strong>Příklad provedení:</strong> Unifikujte <span
-class="math inline">\(get(tmp(Y), sum(69, 42), Z)\)</span> a <span
-class="math inline">\(get(X, sum(Y, 42), high(X))\)</span> 1. <strong>1.
-nesouhlasný pár:</strong> <span class="math inline">\(tmp(Y)\)</span> a
-<span class="math inline">\(X \rightarrow\)</span> substituce <span
-class="math inline">\([tmp(Y)/X]\)</span>. 2. <strong>2. nesouhlasný
-pár:</strong> <span class="math inline">\(69\)</span> a <span
-class="math inline">\(Y \rightarrow\)</span> substituce <span
-class="math inline">\([69/Y]\)</span>. 3. <strong>3. nesouhlasný
-pár:</strong> <span class="math inline">\(Z\)</span> a <span
-class="math inline">\(high(tmp(69)) \rightarrow\)</span> substituce
-<span class="math inline">\([high(tmp(69))/Z]\)</span>.</p>
-<p><strong>Výsledný MGU (<span
-class="math inline">\(\mu\)</span>):</strong> <span
-class="math inline">\([tmp(Y)/X] \circ [69/Y] \circ
-[high(tmp(69))/Z]\)</span>. <strong>Term vzniklý aplikací:</strong>
-<span class="math inline">\(get(tmp(69), sum(69, 42),
-high(tmp(69)))\)</span>.</p>
+<p><strong>Příklad provedení:</strong> Unifikujte dvojici termů</p>
+<pre class="text"><code>get(tmp(Y), sum(69, 42), Z)
+get(X, sum(Y, 42), high(X))</code></pre>
+<p><strong>1. nesouhlasný pár:</strong> <code>tmp(Y)</code> a
+<code>X</code> → substituce <code>[tmp(Y)/X]</code></p>
+<p><strong>2. nesouhlasný pár:</strong> <code>69</code> a <code>Y</code>
+→ substituce <code>[69/Y]</code></p>
+<p><strong>3. nesouhlasný pár:</strong> <code>Z</code> a
+<code>high(tmp(69))</code> → substituce
+<code>[high(tmp(69))/Z]</code></p>
+<p><strong>Výsledný MGU (μ):</strong></p>
+<pre class="text"><code>[tmp(Y)/X] ∘ [69/Y] ∘ [high(tmp(69))/Z]</code></pre>
+<p><strong>Term vzniklý aplikací:</strong></p>
+<pre class="text"><code>get(tmp(69), sum(69, 42), high(tmp(69)))</code></pre>
 <ul>
-<li><strong>Praktická varianta 1:</strong> Unifikujte <span
-class="math inline">\(get(tmp(Y), sum(69, 42), Z)\)</span> a <span
-class="math inline">\(get(X, sum(Y, 42), high(X))\)</span>.
+<li><strong>Praktická varianta 1:</strong></li>
+</ul>
+<pre class="text"><code>get(tmp(Y), sum(69, 42), Z)
+get(X, sum(Y, 42), high(X))</code></pre>
 <ul>
-<li><strong>Výsledek:</strong> MGU je <span
-class="math inline">\([tmp(Y)/X] \circ [69/Y] \circ
-[high(tmp(69))/Z]\)</span>.</li>
-</ul></li>
-<li><strong>Praktická varianta 2:</strong> Unifikujte <span
-class="math inline">\(push(in(Z), min(U, 84), W)\)</span> a <span
-class="math inline">\(push(U, min(U, V), max(V, Y))\)</span>.
+<li><p><strong>Výsledek (MGU):</strong>
+<code>[tmp(Y)/X] ∘ [69/Y] ∘ [high(tmp(69))/Z]</code></p></li>
+<li><p><strong>Praktická varianta 2:</strong></p></li>
+</ul>
+<pre class="text"><code>push(in(Z), min(U, 84), W)
+push(U, min(U, V), max(V, Y))</code></pre>
 <ul>
-<li><strong>Výsledek:</strong> MGU je <span
-class="math inline">\([in(Z)/U] \circ [84/V] \circ [max(84,
-Y)/W]\)</span>.</li>
-</ul></li>
+<li><strong>Výsledek (MGU):</strong>
+<code>[in(Z)/U] ∘ [84/V] ∘ [max(84, Y)/W]</code></li>
 </ul>
 </section>
 </article>
@@ -375,12 +371,19 @@ classDiagram
 <span class="freq" title="Výskyt na zkouškách">15×</span>
 </header>
 <section class="answer" aria-label="Odpověď">
-<p><strong>Třída obsahuje:</strong> 1. Seznam (metadata) instančních
-atributů. 2. Data třídních (statických) atributů. 3. Implementace metod
-(instančních i třídních). 4. Referenci na její vlastní třídu
-(metatřídu).</p>
-<p><strong>Instance obsahuje:</strong> 1. Vlastní identitu. 2. Referenci
-na její třídu. 3. Konkrétní data instančních atributů.</p>
+<p><strong>Třída obsahuje:</strong></p>
+<ol type="1">
+<li>Seznam instančních atributů.</li>
+<li>Data třídních atributů.</li>
+<li>Implementace metod.</li>
+<li>Referenci na její vlastní třídu (metatřídu).</li>
+</ol>
+<p><strong>Instance obsahuje:</strong></p>
+<ol type="1">
+<li>Vlastní identitu.</li>
+<li>Referenci na její třídu.</li>
+<li>Konkrétní data instančních atributů.</li>
+</ol>
 </section>
 </article>
 <article class="topic tier-high" id="uveďte-a-do-podrobna-rozveďte-typy-předávání-parametrů-u-strukturovaných-imperativních-jazyků.">
@@ -390,15 +393,18 @@ na její třídu. 3. Konkrétní data instančních atributů.</p>
 <span class="freq" title="Výskyt na zkouškách">14×</span>
 </header>
 <section class="answer" aria-label="Odpověď">
-<p><strong>Způsoby předávání:</strong> 1. <strong>Hodnotou
-(Call-by-value):</strong> Při tomto způsobu se vytváří lokální kopie dat
-- parametry jsou vyčísleny před voláním podprogramu. 2. <strong>Odkazem
-(Call-by-reference):</strong> Podprogramu se předává ukazatel (adresa)
-na danou proměnnou - změny provedené uvnitř se okamžitě a přímo
-projevují navenek v původní entitě. 3. <strong>Jménem
-(Call-by-name):</strong> Podprogramu se předává dvojice přístupových
-metod k dané entitě pro zápis a čtení její hodnoty - výraz se
-vyhodnocuje při každém přístupu k parametru.</p>
+<p><strong>Způsoby předávání:</strong></p>
+<ol type="1">
+<li><strong>Hodnotou (Call-by-value):</strong> Při tomto způsobu se
+vytváří lokální kopie dat - parametry jsou vyčísleny před voláním
+podprogramu.</li>
+<li><strong>Odkazem (Call-by-reference):</strong> Podprogramu se předává
+ukazatel (adresa) na danou proměnnou - změny provedené uvnitř se
+okamžitě a přímo projevují navenek v původní entitě.</li>
+<li><strong>Jménem (Call-by-name):</strong> Podprogramu se předává
+dvojice přístupových metod k dané entitě pro zápis a čtení její hodnoty
+- výraz se vyhodnocuje při každém přístupu k parametru</li>
+</ol>
 </section>
 </article>
 <article class="topic tier-high" id="popište-rozdíl-v-modelu-výpočtu-deklarativních-a-imperativních-jazyků-v-čem-se-liší-a-jak-se-v-nich-řeší-opakování">
@@ -411,11 +417,11 @@ vyhodnocuje při každém přístupu k parametru.</p>
 <ul>
 <li><p><strong>Imperativní paradigma:</strong> Programátor řeší otázky
 <strong>co</strong> za operace má být provedeno a <strong>v jakém pořadí
-(jak)</strong> to má být provedeno; zpracování probíhá jako postupná
+(jak)</strong> to má být provedeno - zpracování probíhá jako postupná
 modifikace vnitřního stavu a opakování se řeší
 <strong>cykly</strong>.</p></li>
 <li><p><strong>Deklarativní paradigma:</strong> Programátor řeší pouze
-otázku <strong>co</strong> má být zpracováno; interní stav a pořadí
+otázku <strong>co</strong> má být zpracováno - interní stav a pořadí
 vyhodnocení je určeno strategií překladače a neznají sekvence ani cykly,
 takže opakování je řešeno výhradně <strong>rekurzí</strong>.</p></li>
 </ul>
@@ -428,11 +434,15 @@ takže opakování je řešeno výhradně <strong>rekurzí</strong>.</p></li>
 <span class="freq" title="Výskyt na zkouškách">12×</span>
 </header>
 <section class="answer" aria-label="Odpověď">
-<p><strong>Klíčové vlastnosti:</strong> 1. Má <strong>jméno</strong>,
-které ho jednoznačně identifikuje. 2. Má <strong>parametry</strong>,
-které mají uvnitř své jméno, často mají definovaný typ a jsou dány
-pevným pořadím. 3. Může mít <strong>výsledek</strong>. 4. Má
-<strong>vlastní kód</strong>, který obsahuje lokální proměnné.</p>
+<p><strong>Klíčové vlastnosti:</strong></p>
+<ol type="1">
+<li>Má <strong>jméno</strong>, které ho jednoznačně identifikuje.</li>
+<li>Má <strong>parametry</strong>, které mají uvnitř své jméno, často
+mají definovaný typ a jsou dány pevným pořadím.</li>
+<li>Může mít <strong>výsledek</strong>.</li>
+<li>Má <strong>vlastní kód</strong>, který obsahuje lokální
+proměnné.</li>
+</ol>
 <p><strong>Význam vzniku:</strong> Umožnil přímočarou implementaci
 <strong>rekurze</strong>, <strong>ukrytí implementace</strong> a
 <strong>odluku od hlavního toku</strong> programu, což vede k
@@ -447,13 +457,85 @@ bezpečnější modifikaci.</p>
 </header>
 <section class="answer" aria-label="Odpověď">
 <p><strong>Základní vzorec:</strong> <span class="math inline">\(Addr =
-A + (i \times sizeY + j) \times struct\_size + offset\_polozky\)</span>.
-<strong>Zarovnání (Alignment):</strong> Jednotlivé položky jsou v paměti
-zarovnané na délku slova, což vytváří výplňkové bajty
-(<strong>padding</strong>). <strong>Těsné uložení (Packed):</strong>
-Pokud jsou zapnuty modifikátory pro těsné uložení, výplňkové bajty jsou
-odstraněny a <code>struct_size</code> se zmenší na přesný součet
-velikostí jednotlivých typů.</p>
+A + (i \times sizeY + j) \times struct\_size +
+offset\_polozky\)</span>.</p>
+<p><strong>Zarovnání (Alignment):</strong> Jednotlivé položky jsou v
+paměti zarovnané na délku slova, což vytváří výplňkové bajty
+(<strong>padding</strong>).</p>
+<p><strong>Těsné uložení (Packed):</strong> Pokud jsou zapnuty
+modifikátory pro těsné uložení, výplňkové bajty jsou odstraněny a
+<code>struct_size</code> se zmenší na přesný součet velikostí
+jednotlivých typů.</p>
+<p>Zde je konkrétní příklad výpočtu adresy položky ve dvourozměrném poli
+struktur, vycházející z reálného zadání zkouškového bonusu.</p>
+<h3 id="zadání-příkladu"><strong>Zadání příkladu</strong></h3>
+<p><strong>Architektura:</strong> 32bitový systém (délka slova = 4
+bajty).</p>
+<p><strong>Pole:</strong> <code>a[sizeX][sizeY]</code> (pro výpočet je
+klíčový počet sloupců <code>sizeY</code>).</p>
+<p><strong>Struktura prvků v poli:</strong></p>
+<ol type="1">
+<li><code>int</code> (4 bajty)</li>
+<li><code>pointer</code> (4 bajty)</li>
+<li><code>pointer</code> (4 bajty)</li>
+<li><code>int</code> (4 bajty)</li>
+<li><code>char</code> (1 bajt)</li>
+<li><code>double</code> (8 bajtů) — <strong>hledáme adresu této položky
+<code>double</code> na pozici <code>a[i][j]</code></strong>.</li>
+</ol>
+<p><strong>Bázová adresa:</strong> Pole začíná v paměti na adrese
+<strong><code>A</code></strong>.</p>
+<h3 id="varianta-standardní-zarovnané-uložení-alignment"><strong>1.
+Varianta: Standardní zarovnané uložení (Alignment)</strong></h3>
+<p>V tomto režimu překladač vkládá výplňkové bajty (padding), aby
+položky začínaly na adresách dělitelných jejich velikostí nebo délkou
+slova.</p>
+<p><strong>Výpočet offsetů (posunutí) uvnitř struktury:</strong></p>
+<ul>
+<li>První čtyři položky (<code>int</code>, <code>ptr</code>,
+<code>ptr</code>, <code>int</code>) zaberou přesně <span
+class="math inline">\(4 \times 4 = 16\)</span> bajtů (offsety 0, 4, 8,
+12).</li>
+<li>Položka <code>char</code> začne na <strong>offsetu 16</strong> a
+zabere 1 bajt.</li>
+<li>Položka <code>double</code> (8 bajtů) vyžaduje zarovnání (na
+32bitovém systému typicky na hranici 4 bajtů). Protože <code>char</code>
+skončil na bajtu 17, musí následovat <strong>3 bajty
+paddingu</strong>.</li>
+<li><code>double</code> tedy začne na <strong>offsetu 20</strong>.</li>
+</ul>
+<p><strong>Celková velikost struktury
+(<code>sizeof</code>):</strong></p>
+<ul>
+<li><code>double</code> končí na offsetu <span class="math inline">\(20
++ 8 = 28\)</span>. Celková velikost struktury je tedy <strong>28
+bajtů</strong> (což je násobek slova, není třeba další padding na
+konci).</li>
+</ul>
+<p><strong>Výsledný výraz:</strong></p>
+<p><span class="math display">\[Addr = A + (i \times sizeY + j) \times
+28 + 20\]</span></p>
+<h3 id="varianta-těsné-uložení-packed"><strong>2. Varianta: Těsné
+uložení (Packed)</strong></h3>
+<p>Pokud jsou zapnuty modifikátory pro těsné uložení, všechny výplňkové
+bajty (padding) jsou odstraněny.</p>
+<p><strong>Výpočet offsetů:</strong></p>
+<ul>
+<li>Offsety jsou dány prostým součtem velikostí předchozích prvků bez
+mezer.</li>
+<li><code>double</code> začne ihned za <code>char</code> na offsetu:
+<span class="math inline">\(4 + 4 + 4 + 4 + 1 =
+\mathbf{17}\)</span>.</li>
+</ul>
+<p><strong>Celková velikost struktury
+(<code>sizeof</code>):</strong></p>
+<ul>
+<li>Odpovídá součtu všech prvků: <span class="math inline">\(4 + 4 + 4 +
+4 + 1 + 8 = \mathbf{25}\)</span> bajtů.</li>
+</ul>
+<p><strong>Výsledný výraz:</strong></p>
+<p><span class="math display">\[Addr = A + (i \times sizeY + j) \times
+25 + 17\]</span></p>
 </section>
 </article>
 <article class="topic tier-high" id="popište-sémantiku-přístupu-k-položce-v-bitovém-poli-na-úrovni-instrukcí-procesoru-asm-kroky.">
@@ -463,13 +545,16 @@ velikostí jednotlivých typů.</p>
 <span class="freq" title="Výskyt na zkouškách">12×</span>
 </header>
 <section class="answer" aria-label="Odpověď">
-<p><strong>Sémantické kroky:</strong> 1. <strong>Načtení:</strong>
-Načíst celé slovo z paměti. 2. <strong>Posun:</strong> Provést instrukci
-pro <strong>bitový posun nebo rotaci</strong> (shift/rotate), aby cílové
-bity byly zarovnány na začátek (nebo konec) registru. 3.
-<strong>Maskování:</strong> Aplikovat operaci pro <strong>bitové
+<p><strong>Sémantické kroky:</strong></p>
+<ol type="1">
+<li><strong>Načtení:</strong> Načíst celé slovo z paměti.</li>
+<li><strong>Posun:</strong> Provést instrukci pro <strong>bitový posun
+nebo rotaci</strong> (shift/rotate), aby cílové bity byly zarovnány na
+začátek (nebo konec) registru.</li>
+<li><strong>Maskování:</strong> Aplikovat operaci pro <strong>bitové
 maskování</strong> (typicky instrukce AND) k odfiltrování ostatních
-nežádoucích bitů ve slově.</p>
+nežádoucích bitů ve slově.</li>
+</ol>
 </section>
 </article>
 <article class="topic tier-high" id="co-je-to-vícenásobná-dědičnost-1-věta-a-jaké-3-případně-4-problémy-mohou-nastat-při-jejím-využití-uveďte-popis-a-důvody">
@@ -481,21 +566,29 @@ nežádoucích bitů ve slově.</p>
 <section class="answer" aria-label="Odpověď">
 <p><strong>Definice:</strong> Vícenásobná (třídní) dědičnost nastává,
 když má nově definovaná třída více než jednu přímou nadtřídu.</p>
-<p><strong>Problémy (včetně důvodů):</strong> 1. <strong>Kolize jmen
-(atributů a metod):</strong> Nastává, když přímé nadtřídy obsahují členy
-stejného jména a typu. <strong>Důvod:</strong> Návrhář jazyka musí
-rozhodnout o pravidlech vyhledávání konkrétní implementace při invokaci
-(např. priorita pořadí zápisu nebo povinná redefinice).</p>
-<ol start="2" type="1">
+<p><strong>Problémy (včetně důvodů):</strong></p>
+<ol type="1">
+<li><strong>Kolize jmen (atributů a metod):</strong> Nastává, když přímé
+nadtřídy obsahují členy stejného jména a typu.
+<ul>
+<li><strong>Důvod:</strong> Návrhář jazyka musí rozhodnout o pravidlech
+vyhledávání konkrétní implementace při invokaci (např. priorita pořadí
+zápisu nebo povinná redefinice).</li>
+</ul></li>
 <li><strong>Pořadí inicializace (konstruktory):</strong> Je nutné
 stanovit pořadí volání konstruktorů všech nadtříd.
-<strong>Důvod:</strong> Při implicitním volání se využívá algoritmus
+<ul>
+<li><strong>Důvod:</strong> Při implicitním volání se využívá algoritmus
 prohledávání grafu dědičnosti do hloubky (DFS), aby se předešlo
 duplicitní inicializaci.</li>
+</ul></li>
 <li><strong>Uložení instance v paměti:</strong> Není univerzální řešení,
-jak efektivně uspořádat data atributů. <strong>Důvod:</strong> Je
-obtížné zajistit, aby bylo možné instanci využít kdekoli, kde je
-očekáván objekt kterékoli z nadtříd (problém subsumpce).</li>
+jak efektivně uspořádat data atributů.
+<ul>
+<li><strong>Důvod:</strong> Je obtížné zajistit, aby bylo možné instanci
+využít kdekoli, kde je očekáván objekt kterékoli z nadtříd (problém
+subsumpce).</li>
+</ul></li>
 </ol>
 </section>
 </article>
@@ -527,12 +620,15 @@ zajistí, že společný předek je v instanci přítomen pouze jednou.</p>
 <span class="freq" title="Výskyt na zkouškách">10×</span>
 </header>
 <section class="answer" aria-label="Odpověď">
-<p><strong>Přesné vypracování:</strong> 1. <strong>Dělení nulou</strong>
-po uživatelském vstupu. 2. <strong>Indexování mimo rozsah pole</strong>
-. 3. <strong>Špatná práce s pamětí / Neplatný ukazatel</strong> (např.
-dereference NULL nebo práce s „dangling pointerem“). 4.
-<strong>Aritmetické přetečení nebo podtečení
-(overflow/underflow)</strong>.</p>
+<p><strong>Přesné vypracování:</strong></p>
+<ol type="1">
+<li><strong>Dělení nulou</strong> po uživatelském vstupu.</li>
+<li><strong>Indexování mimo rozsah pole</strong> .</li>
+<li><strong>Špatná práce s pamětí / Neplatný ukazatel</strong> (např.
+dereference NULL nebo práce s „dangling pointerem“).</li>
+<li><strong>Aritmetické přetečení nebo podtečení
+(overflow/underflow)</strong>.</li>
+</ol>
 </section>
 </article>
 <article class="topic tier-high" id="co-je-to-sémantika-jaké-způsoby-formalismy-se-používají-při-její-definici-4-odrážky">
@@ -545,15 +641,18 @@ dereference NULL nebo práce s „dangling pointerem“). 4.
 <p><strong>Definice:</strong> Sémantika je popis nebo definice
 <strong>významu</strong> jednotlivých syntaktických konstrukcí a způsobu
 jejich vyhodnocování a zpracování.</p>
-<p><strong>Způsoby definice (formalismy):</strong> 1.
-<strong>Axiomatická sémantika:</strong> Pro každou syntaktickou
+<p><strong>Způsoby definice (formalismy):</strong></p>
+<ol type="1">
+<li><strong>Axiomatická sémantika:</strong> Pro každou syntaktickou
 konstrukci definuje množinu axiomů, které musí být splněny, aby byla
-konstrukce platná. 2. <strong>Operační sémantika:</strong> Definuje
-chování programu jako posloupnost přechodů mezi danými stavy stroje. 3.
-<strong>Denotační sémantika:</strong> Program je definován jako
-matematická funkce, která mapuje vstupy na výstupy. 4. <strong>Slovní
-popis / Ukázka na příkladech:</strong> Neformální vysvětlení
-chování.</p>
+konstrukce platná.</li>
+<li><strong>Operační sémantika:</strong> Definuje chování programu jako
+posloupnost přechodů mezi danými stavy stroje.</li>
+<li><strong>Denotační sémantika:</strong> Program je definován jako
+matematická funkce, která mapuje vstupy na výstupy.</li>
+<li><strong>Slovní popis / Ukázka na příkladech:</strong> Neformální
+vysvětlení chování.</li>
+</ol>
 </section>
 </article>
 <article class="topic tier-high" id="stručně-a-výstižně-definujte-sld-rezoluci-a-popište-její-strategii-vyhodnocování-v-prologu.">
@@ -563,13 +662,17 @@ chování.</p>
 <span class="freq" title="Výskyt na zkouškách">8×</span>
 </header>
 <section class="answer" aria-label="Odpověď">
-<p><strong>Přesné schéma vyhodnocení:</strong> 1. Klauzule jsou z
-databáze vybírány postupně <strong>shora dolů</strong>. 2. Těla
-predikátu jsou vyhodnocována <strong>zleva doprava</strong>. 3. Jedná se
-o <strong>prohledávání do hloubky (DFS)</strong>. Dokud neuspěje první
-podcíl, ostatní zůstávají nedotčené. 4. Při selhání dochází k mechanismu
-<strong>zpětného navracení (backtracking)</strong> k předchozímu bodu
-volby.</p>
+<p><strong>Přesné schéma vyhodnocení:</strong></p>
+<ol type="1">
+<li>Klauzule jsou z databáze vybírány postupně <strong>shora
+dolů</strong></li>
+<li>Těla predikátu jsou vyhodnocována <strong>zleva
+doprava</strong></li>
+<li>Jedná se o <strong>prohledávání do hloubky (DFS)</strong>. Dokud
+neuspěje první podcíl, ostatní zůstávají nedotčené</li>
+<li>Při selhání dochází k mechanismu <strong>zpětného navracení
+(backtracking)</strong> k předchozímu bodu volby</li>
+</ol>
 </section>
 </article>
 <article class="topic tier-high" id="definujte-perzistentní-a-tranzientní-objekt-a-uveďte-klíčové-slovo-pro-perzistenci.">
@@ -581,9 +684,10 @@ volby.</p>
 <section class="answer" aria-label="Odpověď">
 <p><strong>Perzistentní objekt:</strong> Přežívá dobu běhu aplikace a po
 restartu systému je opět k dispozici se stejným stavem i identitou, v
-jaké byl při posledním ukončení. <strong>Tranzientní objekt:</strong>
-Vzniká dynamicky za běhu programu a zaniká nejpozději s jeho ukončením.
-<strong>Klíčové slovo:</strong> V deklarativním označení se pro
+jaké byl při posledním ukončení.</p>
+<p><strong>Tranzientní objekt:</strong> Vzniká dynamicky za běhu
+programu a zaniká nejpozději s jeho ukončením.</p>
+<p><strong>Klíčové slovo:</strong> V deklarativním označení se pro
 perzistenci používá slovo <strong><code>persistent</code></strong>.</p>
 </section>
 </article>
@@ -595,9 +699,10 @@ perzistenci používá slovo <strong><code>persistent</code></strong>.</p>
 </header>
 <section class="answer" aria-label="Odpověď">
 <p><strong>Objekt v SELF:</strong> Je to seznam položek nazývaných
-<strong>sloty</strong>. <strong>Dynamická dědičnost:</strong> Schopnost
-objektu měnit své rodiče za <strong>běhu programu</strong>.
-<strong>Aktivační objekt:</strong> Vzniká při invokaci metody jako
+<strong>sloty</strong>.</p>
+<p><strong>Dynamická dědičnost:</strong> Schopnost objektu měnit své
+rodiče za <strong>běhu programu</strong>.</p>
+<p><strong>Aktivační objekt:</strong> Vzniká při invokaci metody jako
 <strong>klon objektu metody</strong>. Slouží jako lokální jmenný prostor
 a zaniká po dokončení výpočtu.</p>
 </section>
@@ -630,17 +735,22 @@ na který se delegují zprávy, jimž aktuální objekt nerozumí.</li>
 <section class="answer" aria-label="Odpověď">
 <p><strong>Klonování:</strong> Nové objekty vznikají <strong>mělkou
 kopií</strong> (klonováním) existujícího objektu.</p>
-<p><strong>Účastníci a co poskytují:</strong> -
-<strong>Prototyp:</strong> Objekt, který je klonován poskytuje novému
-objektu jeho základní strukturu, tedy datové sloty s implicitními
-hodnotami. - <strong>Rys (Traits):</strong> Speciální objekt, který
-obsahuje pouze sdílené metody a rodičovské sloty - prototyp na něj
-odkazuje, čímž se sdílí implementace metod napříč všemi klony.</p>
-<p><strong>Jak se volají:</strong> - K datovým slotům se přistupuje
-zasláním zprávy s jejich jménem. - Pokud objekt obdrží zprávu, pro
-kterou nemá slot, provede se <strong>delegace</strong>: zpráva se
-přepošle rodiči přes rodičovský slot, přičemž se <strong>nemění
-kontext</strong>.</p>
+<p><strong>Účastníci a co poskytují:</strong></p>
+<ul>
+<li><strong>Prototyp:</strong> Objekt, který je klonován poskytuje
+novému objektu jeho základní strukturu, tedy datové sloty s implicitními
+hodnotami.</li>
+<li><strong>Rys (Traits):</strong> Speciální objekt, který obsahuje
+pouze sdílené metody a rodičovské sloty - prototyp na něj odkazuje, čímž
+se sdílí implementace metod napříč všemi klony.</li>
+</ul>
+<p><strong>Jak se volají:</strong></p>
+<ul>
+<li>K datovým slotům se přistupuje zasláním zprávy s jejich jménem.</li>
+<li>Pokud objekt obdrží zprávu, pro kterou nemá slot, provede se
+<strong>delegace</strong>: zpráva se přepošle rodiči přes rodičovský
+slot, přičemž se <strong>nemění kontext</strong>.</li>
+</ul>
 </section>
 </article>
 <article class="topic tier-medium" id="definujte-co-je-hornova-klauzule-zapište-ji-jak-v-prologu-tak-v-predikátové-logice.">
@@ -652,14 +762,15 @@ kontext</strong>.</p>
 <section class="answer" aria-label="Odpověď">
 <p><strong>Definice:</strong> Hornova klauzule je speciální typ logické
 klauzule, která obsahuje <strong>nejvýše jeden</strong> pozitivní
-literál. * <strong>Zápis v Prologu:</strong>
-<code>H :- B1, B2, ..., Bn.</code> kde <span
-class="math inline">\(H\)</span> je hlava a <span
-class="math inline">\(Bi\)</span> jsou podcíle v těle. * <strong>Zápis v
-predikátové logice:</strong> <span class="math inline">\(H \lor \neg B_1
-\lor \neg B_2 \lor ... \lor \neg B_n\)</span> což je ekvivalentní
-implikaci <span class="math inline">\(B_1 \land B_2 \land ... \land B_n
-\implies H\)</span>.</p>
+literál.</p>
+<p><strong>Zápis v Prologu:</strong> <code>H :- B1, B2, ..., Bn.</code>
+kde <span class="math inline">\(H\)</span> je hlava a <span
+class="math inline">\(Bi\)</span> jsou podcíle v těle.</p>
+<p><strong>Zápis v predikátové logice:</strong> <span
+class="math inline">\(H \lor \neg B_1 \lor \neg B_2 \lor ... \lor \neg
+B_n\)</span> což je ekvivalentní implikaci <span
+class="math inline">\(B_1 \land B_2 \land ... \land B_n \implies
+H\)</span>.</p>
 </section>
 </article>
 
