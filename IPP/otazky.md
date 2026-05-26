@@ -429,3 +429,62 @@ $$Addr = A + (i \times sizeY + j) \times 25 + 17$$
 **Polymorfismus bez dědičnosti:** Ano, je možný. Využívá se u beztřídních jazyků nebo u jazyků s **Duck Typingem**, kde je důležité rozhraní, nikoliv jeho typ či umístění v hierarchii.
 
 **Příklady:** Jazyk **SELF** nebo **Python**.
+
+## 25. Vnořené ošetření v dědičné hierarchii výjimek
+
+„Mějme třídní OOJ s podporou výjimek, kde třída výjimky **ExA** je přímou nadtřídou **ExB** a **ExB** je přímou nadtřídou **ExC**. V hlavním těle programu mějme trojici bloků `try-catch-finally` (vnější) následovanou kódem (vnější epilog). Vnější `catch` má formální parametr typu **ExA**. Uvnitř vnějšího `try`-bloku je vnořena trojice bloků `try-catch-finally` (vnitřní) následovaná kódem (vnitřní epilog). Vnitřní `catch` má parametr typu **ExC**. Uvažujme, že ve vnitřním `try`-bloku dojde k vyvolání výjimky třídy **ExB**. Popište přesně průběh ošetření výjimky, které části kódu se vykonají a které ne a proč.“
+
+**Pseudo-kód:**
+
+```python
+# Hierarchie: ExA -> ExB -> ExC
+try:  # VNĚJŠÍ
+    try:  # VNITŘNÍ
+        raise ExB()              # 1. Vyvolání výjimky
+    catch ExC as e:              # 2. Vnitřní catch (typ ExC)
+        print("Vnitřní ošetření")
+    finally:                     # 3. Vnitřní finally
+        print("Vnitřní finally")
+    print("Vnitřní epilog")      # 4. Vnitřní epilog
+catch ExA as e:                  # 5. Vnější catch (typ ExA)
+    print("Vnější ošetření")
+finally:                         # 6. Vnější finally
+    print("Vnější finally")
+print("Vnější epilog")           # 7. Vnější epilog
+```
+
+**Průběh ošetření:**
+
+1. **Vyvolání:** Ve vnitřním `try` vznikne **instance** výjimky `ExB` a normální tok výpočtu je přerušen.
+2. **Vnitřní `catch(ExC)`:** Výjimka se **nezachytí**, protože `ExB` není `ExC` ani jeho podtřída. `ExB` je naopak v hierarchii **nad** `ExC`.
+3. **Vnitřní `finally`:** Vykoná se **vždy**, i když výjimka nebyla zachycena.
+4. **Vnitřní epilog:** **Nevykoná se**, protože vnitřní blok je opuštěn výjimkou, která nebyla vnitřně ošetřena. Výjimka se **propaguje** do vnějšího bloku.
+5. **Vnější `catch(ExA)`:** Výjimka se **zachytí**, protože `ExB` je podtřídou `ExA`. Do parametru se naváže instance výjimky.
+6. **Vnější `finally`:** Vykoná se **po** vnějším `catch`, opět bez ohledu na to, zda šlo o normální tok nebo výjimku.
+7. **Vnější epilog:** **Vykoná se**, protože výjimka je ve vnějším `catch` považována za ošetřenou a výpočet se vrátí do normálního režimu.
+
+## 26. Propagace při znovu-vyvolání výjimky (re-throw)
+
+„Mějme metodu `m()`, ve které je struktura `try-catch-finally` následovaná dalším kódem (epilogem programu). V bloku `try` je volána metoda `k()`, která vyvolá výjimku **FileEx**. Třída **FileEx** dědí od třídy **Exception**. Blok `catch` specifikuje typ **Exception** a v jeho těle je příkaz `raise FileEx` (znovu-vyvolání). Popište, jakým způsobem se výpočet dokončí.“
+
+**Pseudo-kód:**
+
+```python
+def m():
+    try:
+        k()               # Metoda k() vyvolá FileEx
+    catch Exception as e: # FileEx dědí od Exception
+        raise FileEx()    # Znovu-vyvolání (re-throw)
+    finally:
+        printError()      # Finalizační blok
+
+    print("Epilog m()")   # Epilog programu v rámci metody m
+```
+
+**Průběh ošetření:**
+
+1. **Vyvolání:** `k()` vyvolá `FileEx` a tok výpočtu v `try` je přerušen.
+2. **Zachycení:** `catch(Exception)` výjimku **zachytí**, protože `FileEx` je podtřídou `Exception`.
+3. **Znovu-vyvolání:** V `catch` je výjimka **vyvolána znovu**, takže v rámci `m()` není považována za definitivně ošetřenou.
+4. **`finally`:** Finalizační blok se **vykoná vždy**, i když z metody odchází výjimka dál.
+5. **Epilog metody:** Řádek s epilogem `print("Epilog m()")` se **neprovede**, protože řízení opustí `m()` šířením znovu vyvolané výjimky do volajícího kontextu.

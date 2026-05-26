@@ -22,3 +22,5 @@ Bitová pole a Assembler 12x
 Perzistentní vs. tranzientní objekty 8x
 Hornova klauzule 5x
 Polymorfismus 20x
+Vnořené ošetření v dědičné hierarchii výjimek 24x
+Propagace při znovu-vyvolání výjimky (re-throw) 24x
