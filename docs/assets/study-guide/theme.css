@@ -431,6 +431,57 @@ pre code {
   white-space: pre;
 }
 
+/* Pandoc syntax highlighting (span classes inside .sourceCode) */
+.sourceCode .kw,
+.sourceCode .cf,
+.sourceCode .dt {
+  color: #93c5fd;
+}
+
+.sourceCode .fu,
+.sourceCode .at {
+  color: #a7f3d0;
+}
+
+.sourceCode .st,
+.sourceCode .vs,
+.sourceCode .ss,
+.sourceCode .ch {
+  color: #fde68a;
+}
+
+.sourceCode .bn,
+.sourceCode .dv,
+.sourceCode .fl,
+.sourceCode .op,
+.sourceCode .pp {
+  color: #fca5a5;
+}
+
+.sourceCode .co,
+.sourceCode .do,
+.sourceCode .an {
+  color: #94a3b8;
+  font-style: italic;
+}
+
+.sourceCode .bu,
+.sourceCode .va {
+  color: #c4b5fd;
+}
+
+.sourceCode .er {
+  color: #fecaca;
+  background: rgba(220, 38, 38, 0.18);
+  padding: 0 0.15em;
+  border-radius: 4px;
+}
+
+.sourceCode a {
+  color: inherit;
+  text-decoration: none;
+}
+
 pre.mermaid {
   margin: 1.5rem 0;
   padding: 1.25rem;
